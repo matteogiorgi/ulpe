@@ -1,0 +1,19 @@
+Package: *
+Pin: release a=stable
+Pin-Priority: 700
+
+Package: *
+Pin: release a=stable-updates
+Pin-Priority: 1001
+
+Package: *
+Pin: release a=stable-security
+Pin-Priority: 1001
+
+Package: *
+Pin: release a=stable-backports
+Pin-Priority: 650
+
+Package: *
+Pin: release a=testing
+Pin-Priority: 600

@@ -1,0 +1,220 @@
+#!/usr/bin/env sh
+
+# This script is intended to be used on a Debian or Debian-based distribution
+# and installs a minimal UNIX work environment with some useful packages.
+
+
+
+
+### Functions
+#############
+
+sudo_privileges() {
+    id -Gn 2>/dev/null | grep -qw "sudo"
+}
+# ---
+ask_user() {
+    printf "%s\n" "$1"
+    local ANS
+    read -r -p "wish to proceed anyway? [y/N] " ANS
+    case "$ANS" in
+        y | Y | yes | YES) printf "\n%s\n" "setup resumed";;
+        *) printf "\n%s\n" "setup interrupted"; exit 1;;
+    esac
+}
+# ---
+testing_setup() {
+    [ -s /etc/apt/sources.list ] && grep '^[^#]' /etc/apt/sources.list >/dev/null || return
+    sudo cp /etc/apt/sources.list /etc/apt/sources.list.puts.bak 2>/dev/null || true
+    local REPO="deb https://deb.debian.org/debian testing main contrib non-free"
+    if ! grep -E \
+        '^[[:space:]]*deb[[:space:]]+https?://deb\.debian\.org/debian[[:space:]]+(testing|unstable)\b' \
+        /etc/apt/sources.list \
+        >/dev/null 2>&1
+    then
+        echo "$REPO" \
+            | sudo tee -a /etc/apt/sources.list >/dev/null \
+            && sudo cp "$SCRIPTPATH/base/preferences" "/etc/apt/" >/dev/null 2>&1
+    fi
+    sudo awk '
+    /^[[:space:]]*deb[[:space:]].*(testing|unstable)/ {
+        line = $0
+        if (line !~ /[[:space:]]contrib([[:space:]]|$)/)
+            line = line " contrib"
+        if (line !~ /[[:space:]]non-free([[:space:]]|$)/)
+            line = line " non-free"
+        if (line !~ /[[:space:]]non-free-firmware([[:space:]]|$)/)
+            line = line " non-free-firmware"
+        print line
+        next
+    }
+    { print }
+    ' /etc/apt/sources.list | sudo tee /etc/apt/sources.list.puts.tmp >/dev/null \
+      && sudo mv /etc/apt/sources.list.puts.tmp /etc/apt/sources.list
+}
+# ---
+try_run() {
+    if "$@" >/dev/null 2>&1; then
+        printf "\n"
+    else
+        printf ": %s\n" "command failed"
+    fi
+}
+# ---
+store_conf() {
+    backup_conf () {
+        if [ -f "$1" ]; then
+            printf "%s" "removing '$1'"
+            if [ -L "$1" ]; then
+                try_run unlink "$1"
+            else
+                try_run mv "$1" "$RESTORE/"
+            fi
+        fi
+    }
+    # ---
+    local SCRIPT RESTORE="$HOME/.puts_recovery"
+    mkdir -p "$RESTORE"
+    printf "\n%s\n" "REMOVING BASE SCRIPTS"
+    for SCRIPT in \
+        .profile \
+        .bashrc \
+        .bash_logout \
+        .vimrc \
+        .tmux.conf \
+        .local/bin/fetch.sh
+    do
+        backup_conf "$HOME/$SCRIPT"
+    done
+}
+
+
+
+
+### Checks
+##########
+
+if [ "$(id -u)" -eq 0 ]; then
+    printf "\n%s"   "This script MUST NOT be run as root user since it makes changes"
+    printf "\n%s"   "to the \$HOME directory of the \$USER executing this script."
+    printf "\n%s"   "The \$HOME directory of the root user is, of course, '/root'."
+    printf "\n%s"   "We don't want to mess around in there. So run this script as a"
+    printf "\n%s\n" "normal user. You will be asked for a sudo password when necessary."
+    exit 1
+fi
+# ---
+if [ -d "$HOME/.puts_recovery" ]; then
+    printf "\n%s"   "════════════════ WARNING: puts already set ════════════════"
+    printf "\n%s\n" "remove ~/.puts_recovery directory and run this script again"
+    exit 1
+fi
+
+
+
+
+### Puts-Base
+#############
+
+cat << EOF
+.   .   ___      _        ___
+|\\_/|  | _ \_  _| |_ __  | _ ) __ _ ___ ___
+(O.o)  |  _/ || |  _(_-< | _ \\/ _\` (_-</ -_)
+(> <)  |_|  \\_,_|\\__/__/ |___/\\__,_/__/\\___|
+
+EOF
+
+
+
+
+### Packages
+############
+
+PACKAGES="git bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard procps x11-xkb-utils \
+tmux vim exuberant-ctags wamerican build-essential gcc-doc gdb manpages-dev pkg-config valgrind strace ltrace"
+for PKG in $PACKAGES; do
+    if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
+        PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
+    fi
+done
+# ---
+if [ -n "${PROBLEMS-}" ]; then
+    ask_user "these packages might cause issues: '$PROBLEMS'"
+fi
+# ---
+if ! sudo_privileges; then
+    ask_user "'$USER' does not have sudo privileges"
+fi
+
+
+
+
+### Dependencies
+################
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )" || exit 1
+if sudo_privileges; then
+    while IFS='' read -r OSRELEASELINE; do
+        case "$OSRELEASELINE" in
+            ID=debian | VERSION_ID=\"13\" | "VERSION=\"13 (trixie)\"") LINECOUNT=$(( ${LINECOUNT:-0} + 1 ));;
+            *) :;;
+        esac
+        if [ "${LINECOUNT:-0}" -eq 3 ]; then
+            testing_setup
+            break
+        fi
+    done < /etc/os-release 2>/dev/null
+    # ---
+    sudo sh -c '
+        apt-get update &&
+        apt-get upgrade -qq -y --allow-downgrades &&
+        apt-get purge -qq -y vim-tiny || true
+        for PKG in "$@"; do
+            apt-get install -y -qq --no-install-recommends "$PKG" || true
+        done
+        apt-get -qq -y autoremove --purge &&
+        apt-get -qq -y autoclean
+    ' _ $PACKAGES || {
+        printf "\n%s\n" "packages installation failed"
+        exit 1
+    }
+fi
+
+
+
+
+### Start
+#########
+
+store_conf
+printf "\n%s\n" "COPYING BASE SCRIPTS"
+for SCRIPT in \
+    .profile \
+    .bashrc \
+    .bash_logout \
+    .vimrc \
+    .tmux.conf \
+    fetch.sh
+do
+    printf "%s" "copying '$SCRIPT'"
+    case $SCRIPT in
+        fetch.sh)
+            mkdir -p "$HOME/.local/bin/" >/dev/null 2>&1 || continue
+            try_run cp "$SCRIPTPATH/base/$SCRIPT" "$HOME/.local/bin/"
+            ;;
+        *)
+            try_run cp "$SCRIPTPATH/base/$SCRIPT" "$HOME/"
+            ;;
+    esac
+done
+# ---
+if sudo_privileges; then
+    sudo chsh -s "$(command -v bash)" "$USER"
+fi
+
+
+
+
+### Finish
+##########
+
+printf "\n%s\n" "setup complete"
