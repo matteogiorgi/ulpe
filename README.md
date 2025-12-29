@@ -4,7 +4,7 @@ This repository contains configuration files and installation scripts for a comp
 
 The purpose of this project is to provide a vim-loving, neckbeard-like, barebone environment, fancy enough to be used as a daily driver but not too fancy to be bloated with unnecessary software and dependencies.
 
-For a simpler all-gui setup, take a look at [*PUTS*](https://github.com/matteogiorgi/guts/), it may fit your needs better.
+For a simpler all-gui setup, take a look at [GUTS](https://github.com/matteogiorgi/guts/), it may fit your needs better.
 
 
 
@@ -38,7 +38,7 @@ This one installs additional plugins for your *Vim* alongside a little *vimscrip
 
 ## No-Install
 
-If you don't want to run any installer, you can just copy the main configuration files with the following command and you got yourself a minimal PODEEN. Copy-pasta this in your terminal and hit enter 😜
+If you don't want to run any installer, you can just copy the main configuration files with the following command and you got yourself a minimal PUTS. Copy-pasta this in your terminal and hit enter 😜
 ```sh
 sh -c '
     BASE="https://raw.githubusercontent.com/matteogiorgi/podeen/refs/heads/main/base"
