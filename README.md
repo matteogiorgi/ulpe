@@ -22,7 +22,7 @@ The only prerequisite you need to cover is a working *Debian* in any version or 
 
 This script installs the basic packages and configures *Bash*, *Vim* and *Tmux* for you: just run `./puts_base` from the root of the repository, relaunch your terminal and you are good to go.
 
-> If you are running [*Trixie*](https://www.debian.org/releases/trixie/), this script adds [*Forky*](https://www.debian.org/releases/forky/) repository to your sources-list; for any other running version (older, testing or unstable), it just updates and upgrades your system instead.
+> If you are running [*Trixie*](https://www.debian.org/releases/trixie/), the script adds [*Forky*](https://www.debian.org/releases/forky/) repository to your sources-list; for any other running version (older, testing or unstable), it just updates and upgrades your system instead.
 
 
 
@@ -31,7 +31,7 @@ This script installs the basic packages and configures *Bash*, *Vim* and *Tmux* 
 
 This one installs additional plugins for your *Vim* alongside a little *vimscript* configuration to glue them together: run `./puts_plug` from the root of the repository, launch *Vim* and see the magic happen.
 
-> You need to have *Vim 9.0* or higher installed for this script to work, but it won't be an issue since you should have at least a working *Debian 12* by now with the 9.1 release available.
+> You need to have *Vim 9.0* or higher installed for the script to work, but it won't be an issue since you should have at least a working *Debian 12* by now with the 9.1 release available.
 
 
 
