@@ -129,8 +129,8 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard procps x11-xkb-utils tmux \
-vim exuberant-ctags wamerican build-essential gcc-doc cppman gdb manpages-dev pkg-config valgrind strace ltrace"
+PACKAGES="git bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard procps x11-xkb-utils tmux vim \
+exuberant-ctags wamerican build-essential gcc-doc man-db cppman manpages-dev pkg-config gdb valgrind strace ltrace"
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
         PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
