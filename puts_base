@@ -95,31 +95,32 @@ store_conf() {
 ##########
 
 if [ "$(id -u)" -eq 0 ]; then
-    printf "\n%s"   "This script MUST NOT be run as root user since it makes changes"
-    printf "\n%s"   "to the \$HOME directory of the \$USER executing this script."
-    printf "\n%s"   "The \$HOME directory of the root user is, of course, '/root'."
-    printf "\n%s"   "We don't want to mess around in there. So run this script as a"
-    printf "\n%s\n" "normal user. You will be asked for a sudo password when necessary."
+    printf "\n%s"   "This script MUST NOT be run as root since it makes changes to"
+    printf "\n%s"   "the \$HOME directory of the \$USER executing it."
+    printf "\n%s"   "Run this script as a normal user, you will be asked for a sudo"
+    printf "\n%s\n" "password when necessary."
     exit 1
 fi
 # ---
 if [ -d "$HOME/.puts_recovery" ]; then
-    printf "\n%s"   "════════════════ WARNING: puts already set ════════════════"
-    printf "\n%s\n" "remove ~/.puts_recovery directory and run this script again"
+    printf "\n%s"   "WARNING. PUTS already set: remove ~/.puts_recovery directory"
+    printf "\n%s\n" "═══════  and run this script again."
     exit 1
 fi
 
 
 
 
-### Puts-Base
+### PUTS-Base
 #############
 
 cat << EOF
-.   .   ___      _        ___
-|\\_/|  | _ \_  _| |_ __  | _ ) __ _ ___ ___
-(O.o)  |  _/ || |  _(_-< | _ \\/ _\` (_-</ -_)
-(> <)  |_|  \\_,_|\\__/__/ |___/\\__,_/__/\\___|
+
+              __                __
+.-----.--.--.|  |_.-----.      |  |--.---.-.-----.-----.
+|  _  |  |  ||   _|__ --|      |  _  |  _  |__ --|  -__|
+|   __|_____||____|_____| ____ |_____|___._|_____|_____|
+|__|
 
 EOF
 
@@ -217,4 +218,4 @@ fi
 ### Finish
 ##########
 
-printf "\n%s\n" "setup complete"
+printf "\n%s\n" "BASE SETUP COMPLETE :)"

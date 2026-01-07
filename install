@@ -1,0 +1,103 @@
+#!/usr/bin/env sh
+set -eu
+
+
+
+
+### Functions
+#############
+
+run_base() {
+    chmod +x "$BASE_INSTALLER" 2>/dev/null || :
+    "$BASE_INSTALLER"
+}
+# ---
+run_plug() {
+    chmod +x "$PLUG_INSTALLER" 2>/dev/null || :
+    "$PLUG_INSTALLER"
+}
+
+
+
+
+### Puts-Install
+################
+
+cat << EOF
+
+ _______       __            ___             __         __ __
+|   _   .--.--|  |_.-----.  |   .-----.-----|  |_.---.-|  |  |
+|.  1   |  |  |   _|__ --|  |.  |     |__ --|   _|  _  |  |  |
+|.  ____|_____|____|_____|  |.  |__|__|_____|____|___._|__|__|
+|:  |                       |:  |
+|::.|                       |::.|
+\`---'                       \`---'
+
+This script installs PUTS (the "Portable UNIX TUI System") on
+your system. It will run two installers: puts_base, puts_plug.
+• puts_base installs the basic packages and configures Bash,
+  Vim and Tmux for you
+• puts_plug installs additional plugins for your Vim alongside
+  a little vimscript configuration to glue them together
+EOF
+# ---
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd)
+BASE_INSTALLER="$ROOT_DIR/puts_base"
+PLUG_INSTALLER="$ROOT_DIR/puts_plug"
+
+
+
+
+### Choice
+##########
+
+while :; do
+    printf "\n%s" "[0] full install (default)"
+    printf "\n%s" "[1] puts_base only"
+    printf "\n%s" "[2] puts_plug only"
+    printf "\n%s" "Choose your install [0-2]: "
+    read choice || continue
+    [ -z "${choice:-}" ] && choice=0
+    case "$choice" in
+        0)
+            printf "\n\n\n"
+            run_base
+            printf "\n\n\n"
+            run_plug
+            break
+            ;;
+        1)
+            printf "\n\n\n"
+            run_base
+            break
+            ;;
+        2)
+            printf "\n\n\n"
+            run_plug
+            break
+            ;;
+        *)
+            echo "invalid choice :(" >&2
+            ;;
+    esac
+done
+
+
+
+
+### Finish
+##########
+
+cat << EOF
+
+
+
+
+ _______ __       __       __
+|   _   |__.-----|__.-----|  |--.
+|.  1___|  |     |  |__ --|     |
+|.  __) |__|__|__|__|_____|__|__|
+|:  |
+|::.|
+\`---'
+EOF
