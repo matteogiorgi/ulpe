@@ -50,7 +50,6 @@ fi
 #############
 
 cat << EOF
-
               __                        __
 .-----.--.--.|  |_.-----.       .-----.|  |.--.--.-----.
 |  _  |  |  ||   _|__ --|       |  _  ||  ||  |  |  _  |
@@ -160,4 +159,4 @@ fi
 ### Finish
 ##########
 
-printf "\n%s\n" "PLUG SETUP COMPLETE :)"
+printf "\n%s\n" "PLUG SETUP COMPLETE."

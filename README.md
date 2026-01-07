@@ -15,7 +15,7 @@ The only prerequisite you need to cover is a working *Debian* in any version or 
 
 > The installers do not symlink any file, they just copy the configurations in the right place, so they can be easily modified end eventually resetted running the single installer again.
 
-To full install PUTS, run the [`install`](https://github.com/matteogiorgi/puts/blob/main/install) script, it will execute both installers in the right order for you.
+To full install PUTS, run the [`install`](https://github.com/matteogiorgi/puts/blob/main/install) script, it will execute both installers for you.
 
 
 
