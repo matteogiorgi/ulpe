@@ -40,6 +40,7 @@ augroup end
 " ---
 augroup keywordprg_filetype
     autocmd FileType python setlocal keywordprg=pydoc
+    autocmd FileType scheme setlocal keywordprg=
 augroup end
 " }}}
 
