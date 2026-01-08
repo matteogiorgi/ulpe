@@ -28,6 +28,7 @@ your system. It will run two installers: puts_base, puts_plug.
 ╔═════════╗
 ║puts_plug║ Installs additional plugins for your Vim alongside a
 ╚═════════╝ little vimscript configuration to glue them together.
+
 EOF
 
 
@@ -40,8 +41,5 @@ ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd)
 BASE_INSTALLER="$ROOT_DIR/puts_base"
 PLUG_INSTALLER="$ROOT_DIR/puts_plug"
 # ---
-printf "\n\n"
-run_installer "$BASE_INSTALLER"
-# ---
-printf "\n\n"
+run_installer "$BASE_INSTALLER"; printf "\n"
 run_installer "$PLUG_INSTALLER"
