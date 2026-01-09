@@ -21,13 +21,11 @@ function! s:Formatter(bin, cmd) abort
     if executable(a:bin)
         silent! update
         execute 'silent! !' . a:cmd . ' % >/dev/null 2>&1'
-        redraw! | redrawstatus! | redrawtabline
-    elseif exists(':CleanBuffer')
-        CleanBuffer
-    else
-        silent! update
+        redraw!|redrawstatus!|redrawtabline
+        echo 'buffer formatted'
+        return
     endif
-    echo 'buffer cleaned'
+    CleanBuffer
 endfunction
 " ---
 augroup language_cmd
@@ -38,7 +36,7 @@ augroup language_cmd
 augroup end
 " ---
 augroup language_doc
-    autocmd FileType python nnoremap <buffer> K K
+    autocmd FileType python nnoremap <buffer> K :KeywordLookup<CR>
     autocmd FileType python setlocal keywordprg=pydoc
 augroup end
 " }}}

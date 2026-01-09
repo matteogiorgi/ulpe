@@ -314,11 +314,7 @@ function! s:CleanBuffer() abort
 endfunction
 " ---
 function! s:ExecScript(cmd, target) abort
-    if exists(':CleanBuffer')
-        CleanBuffer
-    else
-        silent! update
-    endif
+    silent! call <SID>CleanBuffer()
     let l:target = expand(a:target)
     if empty(l:target)
         echo 'empty target'
@@ -332,12 +328,39 @@ function! s:GitDiff() abort
         echo "'" . getcwd() . "' is not in a git repo"
         return
     endif
-    if exists(':CleanBuffer')
-        CleanBuffer
-    else
-        silent! update
-    endif
+    silent! call <SID>CleanBuffer()
     execute '!git diff %'
+endfunction
+" ---
+function! s:KeywordLookup() abort
+    let l:word = expand('<cword>')
+    if empty(l:word)
+        return
+    endif
+    silent! execute '!' . &keywordprg . ' ' . shellescape(l:word) . ' >/dev/tty 2>/dev/null'
+    redraw!|redrawstatus!|redrawtabline
+    if v:shell_error != 0
+        echo "'" . l:word . "' not in doc"
+    endif
+endfunction
+" ---
+function! s:OpenHTML(page) abort
+    let l:doc = expand(a:page)
+    if ! executable('w3m')
+        echo 'w3m not found'
+        return
+    endif
+    if l:doc =~# '^https\?://'
+        silent! execute '!w3m ' . shellescape(l:doc) . ' >/dev/tty 2>/dev/null'
+        redraw!|redrawstatus!|redrawtabline
+        return
+    endif
+    if ! filereadable(l:doc)
+        echo "'" . l:doc . "' not readable"
+        return
+    endif
+    silent! execute '!w3m ' . l:doc . ' >/dev/tty 2>/dev/null'
+    redraw!|redrawstatus!|redrawtabline
 endfunction
 " }}}
 
@@ -474,7 +497,8 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType vim,sh,awk,c,cpp nnoremap <buffer> K K
+    autocmd FileType vim,sh,awk,c,cpp nnoremap <buffer> K :call <SID>KeywordLookup()<CR>
+    autocmd FileType scheme nnoremap <buffer> K :call <SID>OpenHTML('/usr/share/doc/chezscheme-doc/html/csug_1.html')<CR>
     autocmd FileType vim setlocal keywordprg=:help
     autocmd FileType sh,awk,c setlocal keywordprg=man
     autocmd FileType cpp setlocal keywordprg=cppman
@@ -500,6 +524,8 @@ command! -nargs=0 ScratchBuffer call <SID>ScratchBuffer()
 command! -nargs=0 SSession call <SID>SSession()
 command! -nargs=0 OSession call <SID>OSession()
 command! -nargs=0 GitDiff call <SID>GitDiff()
+command! -nargs=0 KeywordLookup call <SID>KeywordLookup()
+command! -nargs=? OpenHTML call <SID>OpenHTML(<q-args>)
 " }}}
 
 
