@@ -474,11 +474,10 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
+    autocmd FileType vim,sh,awk,c,cpp nnoremap <buffer> K K
+    autocmd FileType vim setlocal keywordprg=:help
     autocmd FileType sh,awk,c setlocal keywordprg=man
     autocmd FileType cpp setlocal keywordprg=cppman
-    autocmd FileType scheme
-          \ setlocal keywordprg=|
-          \ nnoremap <buffer> K <Nop>
 augroup end
 " }}}
 
@@ -526,6 +525,7 @@ vnoremap <silent>L >gv
 xnoremap <silent>J :move '>+1<CR>gv=gv
 xnoremap <silent>K :move '<-2<CR>gv=gv
 " ---
+nnoremap <silent>K <Nop>
 nnoremap <silent>Y y$
 nnoremap <silent>ZU :update<BAR>rviminfo<CR>
 nnoremap <silent>ZO :tabnew%<CR>

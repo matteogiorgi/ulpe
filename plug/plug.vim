@@ -38,6 +38,7 @@ augroup language_cmd
 augroup end
 " ---
 augroup language_doc
+    autocmd FileType python nnoremap <buffer> K K
     autocmd FileType python setlocal keywordprg=pydoc
 augroup end
 " }}}
