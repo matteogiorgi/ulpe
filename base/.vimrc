@@ -345,22 +345,21 @@ function! s:KeywordLookup() abort
 endfunction
 " ---
 function! s:OpenHTML(page) abort
-    let l:doc = expand(a:page)
     if ! executable('w3m')
         echo 'w3m not found'
         return
     endif
-    if l:doc =~# '^https\?://'
-        silent! execute '!w3m ' . shellescape(l:doc) . ' >/dev/tty 2>/dev/null'
+    let l:target = expand(a:page)
+    if filereadable(l:target)
+        silent! execute '!w3m ' . l:target . ' >/dev/tty 2>/dev/null'
         redraw!|redrawstatus!|redrawtabline
         return
     endif
-    if ! filereadable(l:doc)
-        echo "'" . l:doc . "' not readable"
-        return
-    endif
-    silent! execute '!w3m ' . l:doc . ' >/dev/tty 2>/dev/null'
+    silent! execute '!w3m ' . shellescape(l:target) . ' >/dev/tty 2>/dev/null'
     redraw!|redrawstatus!|redrawtabline
+    if v:shell_error != 0
+        echo "'" . l:target . "' not readable"
+    endif
 endfunction
 " }}}
 
