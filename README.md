@@ -1,6 +1,6 @@
 # UNIX-Like Portable Environment
 
-This repository contains configuration files and installation scripts for a complete and efficient minimal *UNIX* work environment based on any [Debian](https://www.debian.org) or [Debian-based](https://distrowatch.com/search.php?basedon=Debian&status=Active#distrosearch) distribution.
+This repository contains configuration files and installation scripts for a complete and efficient minimal *UNIX-like* work environment based on any [Debian](https://www.debian.org) or [Debian-based](https://distrowatch.com/search.php?basedon=Debian&status=Active#distrosearch) distribution.
 
 The purpose of this project is to provide a vim-loving, neckbeard-like, barebone environment, fancy enough to be used as a daily driver but not too fancy to be bloated with unnecessary software and dependencies.
 
