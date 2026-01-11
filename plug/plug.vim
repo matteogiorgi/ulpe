@@ -7,7 +7,7 @@
 
 
 " Init {{{
-if exists('g:plugme') || !exists('g:pbase') || v:version < 900
+if exists('g:uplug') || !exists('g:ubase') || v:version < 900
     finish
 endif
 let g:uplug = 1
