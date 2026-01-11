@@ -12,7 +12,7 @@ if v:version < 900
 elseif !isdirectory(expand('~/.vim'))
     silent! execute '!mkdir -p ~/.vim >/dev/null 2>&1'
 endif
-let g:pbase = 1
+let g:ubase = 1
 " }}}
 
 

@@ -10,7 +10,7 @@
 if exists('g:plugme') || !exists('g:pbase') || v:version < 900
     finish
 endif
-let g:pplug = 1
+let g:uplug = 1
 "}}}
 
 

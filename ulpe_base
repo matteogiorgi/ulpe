@@ -25,7 +25,7 @@ ask_user() {
 # ---
 testing_setup() {
     [ -s /etc/apt/sources.list ] && grep '^[^#]' /etc/apt/sources.list >/dev/null || return
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list.puts.bak 2>/dev/null || true
+    sudo cp /etc/apt/sources.list /etc/apt/sources.list.ulpe.bak 2>/dev/null || true
     local REPO="deb https://deb.debian.org/debian testing main contrib non-free"
     if ! grep -E \
         '^[[:space:]]*deb[[:space:]]+https?://deb\.debian\.org/debian[[:space:]]+(testing|unstable)\b' \
@@ -49,8 +49,8 @@ testing_setup() {
         next
     }
     { print }
-    ' /etc/apt/sources.list | sudo tee /etc/apt/sources.list.puts.tmp >/dev/null \
-      && sudo mv /etc/apt/sources.list.puts.tmp /etc/apt/sources.list
+    ' /etc/apt/sources.list | sudo tee /etc/apt/sources.list.ulpe.tmp >/dev/null \
+      && sudo mv /etc/apt/sources.list.ulpe.tmp /etc/apt/sources.list
 }
 # ---
 try_run() {
@@ -73,7 +73,7 @@ store_conf() {
         fi
     }
     # ---
-    local SCRIPT RESTORE="$HOME/.puts_recovery"
+    local SCRIPT RESTORE="$HOME/.ulpe_recovery"
     mkdir -p "$RESTORE"
     printf "\n%s\n" "REMOVING BASE SCRIPTS"
     for SCRIPT in \
@@ -102,8 +102,8 @@ if [ "$(id -u)" -eq 0 ]; then
     exit 1
 fi
 # ---
-if [ -d "$HOME/.puts_recovery" ]; then
-    printf "\n%s"   "WARNING. PUTS already set: remove ~/.puts_recovery directory"
+if [ -d "$HOME/.ulpe_recovery" ]; then
+    printf "\n%s"   "WARNING. ULPE already set: remove ~/.ulpe_recovery directory"
     printf "\n%s\n" "═══════  and run this script again."
     exit 1
 fi
@@ -111,16 +111,16 @@ fi
 
 
 
-### PUTS-Base
+### ULPE-Base
 #############
 
 cat << EOF
 
-              __                __
-.-----.--.--.|  |_.-----.      |  |--.---.-.-----.-----.
-|  _  |  |  ||   _|__ --|      |  _  |  _  |__ --|  -__|
-|   __|_____||____|_____| ____ |_____|___._|_____|_____|
-|__|
+        __                     __
+.--.--.|  |.-----.-----.      |  |--.---.-.-----.-----.
+|  |  ||  ||  _  |  -__|      |  _  |  _  |__ --|  -__|
+|_____||__||   __|_____| ____ |_____|___._|_____|_____|
+           |__|
 
 EOF
 

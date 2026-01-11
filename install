@@ -15,18 +15,18 @@ run_installer() {
 
 
 
-### Puts-Install
+### ULPE-Install
 ################
 
 cat << EOF
 
-This script installs PUTS (the "Portable UNIX TUI System") on
-your system. It will run two installers: puts_base, puts_plug.
+This script installs ULPE (the "UNIX-Like Portable Environment")
+on your system. It will run two installers: ulpe_base, ulpe_plug.
 ╔═════════╗
-║puts_base║ Installs the basic packages and configures Bash,
-╚═════════╝ Vim and Tmux for you.
+║ulpe_base║ Installs the basic packages and configures Bash, Vim
+╚═════════╝ and Tmux for you.
 ╔═════════╗
-║puts_plug║ Installs additional plugins for your Vim alongside a
+║ulpe_plug║ Installs additional plugins for your Vim alongside a
 ╚═════════╝ little vimscript configuration to glue them together.
 
 EOF
@@ -38,8 +38,8 @@ EOF
 ###############
 
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd)
-BASE_INSTALLER="$ROOT_DIR/puts_base"
-PLUG_INSTALLER="$ROOT_DIR/puts_plug"
+BASE_INSTALLER="$ROOT_DIR/ulpe_base"
+PLUG_INSTALLER="$ROOT_DIR/ulpe_plug"
 # ---
 run_installer "$BASE_INSTALLER"; printf "\n"
 run_installer "$PLUG_INSTALLER"
