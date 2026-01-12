@@ -130,9 +130,9 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git wget w3m w3m-img bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard \
-procps x11-xkb-utils tmux vim exuberant-ctags wamerican build-essential gcc-doc man-db cppman manpages-dev \
-pkg-config valgrind gdb strace ltrace"
+PACKAGES="git bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard procps x11-xkb-utils \
+tmux vim exuberant-ctags wamerican build-essential gcc-doc man-db cppman manpages-dev pkg-config valgrind \
+gdb strace ltrace wget w3m w3m-img htop tree"
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
         PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
