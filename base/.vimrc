@@ -326,7 +326,7 @@ function! s:ExecScript(cmd, target) abort
         echo 'empty target'
         return
     endif
-    execute 'terminal ++curwin ' . a:cmd . ' ' . fnameescape(l:target)
+    execute a:cmd . ' ' . fnameescape(l:target)
 endfunction
 " ---
 function! s:GitDiff() abort
@@ -490,13 +490,14 @@ augroup viminfo_sync
     autocmd TextYankPost * silent! wviminfo
 augroup end
 " ---
-augroup exec_cmd
+augroup language_cmd
     autocmd!
     for [ft, cmd] in [
-          \     ['sh', 'sh'],
-          \     ['awk', 'awk -f'],
+          \     ['vim', 'source'],
+          \     ['sh', 'terminal ++curwin sh'],
+          \     ['awk', 'terminal ++curwin awk -f'],
           \ ]
-        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <leader>x :ExecScript ' . escape(cmd, ' ') . ' %<CR>'
+        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <leader>x :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
     endfor
 augroup end
 " ---
@@ -547,10 +548,10 @@ noremap <silent><C-l> )
 noremap <silent><C-j> }
 noremap <silent><C-k> {
 " ---
-inoremap <silent> <C-c> <Esc>
-xnoremap <silent> <C-c> <Esc>
-snoremap <silent> <C-c> <Esc>
-onoremap <silent> <C-c> <Esc>
+inoremap <silent><C-c> <Esc>
+xnoremap <silent><C-c> <Esc>
+snoremap <silent><C-c> <Esc>
+onoremap <silent><C-c> <Esc>
 " ---
 vnoremap <silent>H <gv
 vnoremap <silent>L >gv
