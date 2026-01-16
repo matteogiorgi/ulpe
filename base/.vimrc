@@ -536,6 +536,8 @@ vnoremap <silent>L >gv
 xnoremap <silent>J :move '>+1<CR>gv=gv
 xnoremap <silent>K :move '<-2<CR>gv=gv
 " ---
+tnoremap <silent><C-q> <C-\><C-n>
+xnoremap <silent>p "_dP
 nnoremap <silent>K <Nop>
 nnoremap <silent>Y y$
 nnoremap <silent>ZU :update<BAR>rviminfo<CR>
@@ -557,4 +559,4 @@ nnoremap <leader>c :CopyClip<CR>
 nnoremap <leader>v :PastaClip<CR>
 " }}}
 
-" vim: fdm=marker:sw=2:sts=2:et
+" vim: fdm=marker:sw=4:sts=4:et

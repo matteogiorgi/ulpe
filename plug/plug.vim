@@ -87,4 +87,4 @@ if &rtp =~ 'sonokai'
 endif
 "}}}
 
-" vim: fdm=marker:sw=2:sts=2:et
+" vim: fdm=marker:sw=4:sts=4:et
