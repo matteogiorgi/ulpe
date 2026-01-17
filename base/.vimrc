@@ -192,21 +192,6 @@ function! s:PastaClip() abort
     echom printf(l:who . 'pasted into register "%s"', l:reg ==# '"' ? 'unnamed' : l:reg)
 endfunction
 " ---
-function! s:ToggleIM() abort
-    if get(b:, 'insertmode', 0)
-        unlet b:insertmode
-        setlocal colorcolumn= cursorline
-        setlocal number relativenumber
-        return
-    endif
-    let b:insertmode = 1
-    if !get(b:, 'wrapmotion', 0)
-        let &l:colorcolumn = '121,'.join(range(121, 999), ',')
-    endif
-    setlocal nocursorline
-    setlocal number norelativenumber
-endfunction
-" ---
 function! s:ToggleFC() abort
     let &foldcolumn = (&foldcolumn + 1) % 2
 endfunction
@@ -399,23 +384,27 @@ augroup end
 augroup linenumber_prettyfier
     autocmd!
     autocmd FileType help,qf setlocal nonumber norelativenumber
-    autocmd InsertEnter,InsertLeave * silent! call <SID>ToggleIM()
-    autocmd BufEnter,WinEnter *
-          \ setlocal cursorline|
-          \ setlocal relativenumber
-    autocmd BufLeave,WinLeave *
-          \ if mode() ==# 'i'|
-          \     stopinsert|
-          \ endif|
-          \ setlocal colorcolumn= nocursorline|
-          \ setlocal norelativenumber
+    autocmd TerminalOpen *
+          \ setlocal nobuflisted bufhidden=wipe|
+          \ setlocal nonumber norelativenumber
     autocmd BufWinEnter *
           \ if !get(b:, 'wrapmotion', 0) && &l:wrap|
           \     silent! call <SID>ToggleWM()|
           \ endif
-    autocmd TerminalOpen *
-          \ setlocal nobuflisted bufhidden=wipe|
-          \ setlocal nonumber norelativenumber
+    autocmd InsertEnter *
+          \ if !get(b:, 'wrapmotion', 0)|
+          \     let &l:colorcolumn = '121,'.join(range(121, 999), ',')|
+          \ endif|
+          \ setlocal nocursorline|
+          \ setlocal number norelativenumber
+    autocmd InsertLeave *
+          \ setlocal colorcolumn= cursorline|
+          \ setlocal number relativenumber
+    autocmd WinLeave *
+          \ if mode() ==# 'i'|
+          \     stopinsert|
+          \     doautocmd InsertLeave|
+          \ endif
 augroup end
 " ---
 augroup syntax_prettyfier
