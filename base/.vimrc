@@ -225,7 +225,7 @@ endfunction
 function! s:ToggleQF() abort
     silent! lclose
     if empty(filter(range(1, winnr('$')), 'getwinvar(v:val, "&filetype") ==# "qf"'))
-        silent! copen
+        silent! belowright copen
         return
     endif
     silent! cclose
