@@ -486,9 +486,9 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType vim nnoremap <buffer> K K
+    autocmd FileType vim,help nnoremap <buffer> K K
     autocmd FileType sh,awk,c,cpp nnoremap <buffer> K :call <SID>KeywordLookup()<CR>
-    autocmd FileType vim setlocal keywordprg=:help
+    autocmd FileType vim,help setlocal keywordprg=:help
     autocmd FileType sh,awk setlocal keywordprg=man
     autocmd FileType c setlocal keywordprg=man\ 3
     autocmd FileType cpp setlocal keywordprg=cppman
@@ -521,31 +521,30 @@ command! -nargs=0 KeywordLookup call <SID>KeywordLookup()
 
 
 " Keymaps {{{
-nnoremap <silent><C-n> :bnext<CR>
-nnoremap <silent><C-p> :bprev<CR>
-nnoremap <silent><Tab> :buffer#<CR>
+inoremap <silent><C-c> <Esc>
+xnoremap <silent><C-c> <Esc>
+snoremap <silent><C-c> <Esc>
+onoremap <silent><C-c> <Esc>
 " ---
 noremap <silent><C-h> (
 noremap <silent><C-l> )
 noremap <silent><C-j> }
 noremap <silent><C-k> {
 " ---
-inoremap <silent><C-c> <Esc>
-xnoremap <silent><C-c> <Esc>
-snoremap <silent><C-c> <Esc>
-onoremap <silent><C-c> <Esc>
-" ---
 vnoremap <silent>H <gv
 vnoremap <silent>L >gv
-xnoremap <silent>J :move '>+1<CR>gv=gv
-xnoremap <silent>K :move '<-2<CR>gv=gv
+xnoremap <silent>J :move<Space>'>+1<CR>gv=gv
+xnoremap <silent>K :move<Space>'<-2<CR>gv=gv
 " ---
 tnoremap <silent><C-q> <C-\><C-n>
-xnoremap <silent>p "_dP
+nnoremap <silent><C-n> :bnext<CR>
+nnoremap <silent><C-p> :bprev<CR>
+nnoremap <silent>ZB :buffer#<CR>
+nnoremap <silent>ZO :tabnew%<CR>
+nnoremap <silent>ZU :update<BAR>silent!<Space>wviminfo<CR>
 nnoremap <silent>K <Nop>
 nnoremap <silent>Y y$
-nnoremap <silent>ZU :update<BAR>rviminfo<CR>
-nnoremap <silent>ZO :tabnew%<CR>
+xnoremap <silent>p "_dP
 " ---
 nnoremap <leader>q :ToggleQF<CR>
 nnoremap <leader>w :ToggleWM<CR>
