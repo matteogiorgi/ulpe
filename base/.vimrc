@@ -393,14 +393,10 @@ augroup linenumber_prettyfier
           \ if !get(b:, 'wrapmotion', 0)|
           \     let &l:colorcolumn = '121,'.join(range(121, 999), ',')|
           \ endif|
-          \ if &filetype !=# 'help'|
-          \     setlocal number norelativenumber|
-          \ endif|
+          \ setlocal number norelativenumber|
           \ setlocal nocursorline
     autocmd InsertLeave *
-          \ if &filetype !=# 'help'|
-          \     setlocal number relativenumber|
-          \ endif|
+          \ setlocal number relativenumber|
           \ setlocal colorcolumn= cursorline
     autocmd WinLeave *
           \ if mode() ==# 'i'|
