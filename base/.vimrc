@@ -440,7 +440,7 @@ augroup end
 augroup writer_filetype
     autocmd!
     autocmd FileType plaintex setfiletype=tex
-    autocmd FileType tex,markdown,html,text,scratch,help
+    autocmd FileType tex,markdown,html,text,scratch
           \ setlocal formatoptions=|
           \ setlocal spell conceallevel=0|
           \ setlocal spelllang=en_us|
