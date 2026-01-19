@@ -384,9 +384,7 @@ augroup end
 augroup linenumber_prettyfier
     autocmd!
     autocmd FileType help,qf setlocal nonumber norelativenumber
-    autocmd TerminalOpen *
-          \ setlocal nobuflisted bufhidden=wipe|
-          \ setlocal nonumber norelativenumber
+    autocmd TerminalOpen * setlocal nonumber norelativenumber nobuflisted bufhidden=wipe
     autocmd BufWinEnter *
           \ if !get(b:, 'wrapmotion', 0) && &l:wrap|
           \     silent! call <SID>ToggleWM()|
@@ -395,11 +393,15 @@ augroup linenumber_prettyfier
           \ if !get(b:, 'wrapmotion', 0)|
           \     let &l:colorcolumn = '121,'.join(range(121, 999), ',')|
           \ endif|
-          \ setlocal nocursorline|
-          \ setlocal number norelativenumber
+          \ if &filetype !=# 'help'|
+          \     setlocal number norelativenumber|
+          \ endif|
+          \ setlocal nocursorline
     autocmd InsertLeave *
-          \ setlocal colorcolumn= cursorline|
-          \ setlocal number relativenumber
+          \ if &filetype !=# 'help'|
+          \     setlocal number relativenumber|
+          \ endif|
+          \ setlocal colorcolumn= cursorline
     autocmd WinLeave *
           \ if mode() ==# 'i'|
           \     stopinsert|
@@ -442,7 +444,7 @@ augroup end
 augroup writer_filetype
     autocmd!
     autocmd FileType plaintex setfiletype=tex
-    autocmd FileType tex,markdown,html,text,scratch
+    autocmd FileType tex,markdown,html,text,scratch,help
           \ setlocal formatoptions=|
           \ setlocal spell conceallevel=0|
           \ setlocal spelllang=en_us|
@@ -540,7 +542,7 @@ tnoremap <silent><C-q> <C-\><C-n>
 nnoremap <silent><C-n> :bnext<CR>
 nnoremap <silent><C-p> :bprev<CR>
 nnoremap <silent>ZB :buffer#<CR>
-nnoremap <silent>ZO :tabnew%<CR>
+nnoremap <silent>ZO :tab<Space>split<CR>
 nnoremap <silent>ZU :update<BAR>silent!<Space>wviminfo<CR>
 nnoremap <silent>K <Nop>
 nnoremap <silent>Y y$
