@@ -524,40 +524,38 @@ xnoremap <silent><C-c> <Esc>
 snoremap <silent><C-c> <Esc>
 onoremap <silent><C-c> <Esc>
 " ---
-noremap <silent><C-h> (
-noremap <silent><C-l> )
-noremap <silent><C-j> }
-noremap <silent><C-k> {
-" ---
-vnoremap <silent>H <gv
-vnoremap <silent>L >gv
-xnoremap <silent>J :move<Space>'>+1<CR>gv=gv
-xnoremap <silent>K :move<Space>'<-2<CR>gv=gv
+xnoremap <silent><expr> <localleader>h '<' . repeat('gv', v:count1)
+xnoremap <silent><expr> <localleader>l '>' . repeat('gv', v:count1)
+xnoremap <silent><expr> <localleader>j ':move<Space>''>+' . v:count1 . "<CR>gv=gv"
+xnoremap <silent><expr> <localleader>k ':move<Space>''<-' . (v:count1 + 1) . "<CR>gv=gv"
 " ---
 tnoremap <silent><C-q> <C-\><C-n>
-nnoremap <silent><C-n> :bnext<CR>
-nnoremap <silent><C-p> :bprev<CR>
-nnoremap <silent>ZB :buffer#<CR>
+inoremap <silent><C-x><C-g> <C-x><C-]>
+nnoremap <silent><localleader>i <C-]>
+nnoremap <silent><localleader>o <C-t>
+nnoremap <silent><localleader>p :bprev<CR>
+nnoremap <silent><localleader>n :bnext<CR>
+nnoremap <silent><localleader>b :buffer#<CR>
 nnoremap <silent>ZO :tab<Space>split<CR>
 nnoremap <silent>ZU :update<BAR>silent!<Space>wviminfo<CR>
 nnoremap <silent>K <Nop>
 nnoremap <silent>Y y$
 xnoremap <silent>p "_dP
 " ---
-nnoremap <leader>q :ToggleQF<CR>
-nnoremap <leader>w :ToggleWM<CR>
-nnoremap <leader>e :ResetSR<CR>
-nnoremap <leader>r :ResetQF<CR>
-nnoremap <leader>t :CTags<CR>
-nnoremap <leader>o :OSession<CR>
-nnoremap <leader>p :SSession<CR>
-nnoremap <leader>a :AddLineQF<CR>
-nnoremap <leader>s :ScratchBuffer<CR>
-nnoremap <leader>d :CleanBuffer<CR>
-nnoremap <leader>g :GitDiff<CR>
-nnoremap <leader>z :ToggleFC<CR>
-nnoremap <leader>c :CopyClip<CR>
-nnoremap <leader>v :PastaClip<CR>
+nnoremap <silent><leader>q :ToggleQF<CR>
+nnoremap <silent><leader>w :ToggleWM<CR>
+nnoremap <silent><leader>e :ResetSR<CR>
+nnoremap <silent><leader>r :ResetQF<CR>
+nnoremap <silent><leader>t :CTags<CR>
+nnoremap <silent><leader>o :OSession<CR>
+nnoremap <silent><leader>p :SSession<CR>
+nnoremap <silent><leader>a :AddLineQF<CR>
+nnoremap <silent><leader>s :ScratchBuffer<CR>
+nnoremap <silent><leader>d :CleanBuffer<CR>
+nnoremap <silent><leader>g :GitDiff<CR>
+nnoremap <silent><leader>z :ToggleFC<CR>
+nnoremap <silent><leader>c :CopyClip<CR>
+nnoremap <silent><leader>v :PastaClip<CR>
 " }}}
 
 " vim: fdm=marker:sw=4:sts=4:et

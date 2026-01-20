@@ -29,12 +29,12 @@ function! s:Formatter(bin, cmd) abort
 endfunction
 " ---
 augroup language_cmd
-    autocmd FileType python nnoremap <buffer> <leader>d :call <SID>Formatter('black', 'black')<CR>
-    autocmd FileType python nnoremap <buffer> <leader>x :ExecScript terminal\ ++curwin\ python3 %<CR>
+    autocmd FileType python nnoremap <buffer> <silent><leader>d :call <SID>Formatter('black', 'black')<CR>
+    autocmd FileType python nnoremap <buffer> <silent><leader>x :ExecScript terminal\ ++curwin\ python3 %<CR>
 augroup end
 " ---
 augroup language_doc
-    autocmd FileType python nnoremap <buffer> K :KeywordLookup<CR>
+    autocmd FileType python nnoremap <buffer> <silent>K :KeywordLookup<CR>
     autocmd FileType python setlocal keywordprg=pydoc
 augroup end
 " }}}
@@ -55,17 +55,17 @@ if &rtp =~ 'ctrlp'
     augroup netrw_prettyfier
         autocmd FileType netrw
               \ if g:loaded_ctrlp == 1|
-              \     nmap <buffer> <leader>f :CtrlP<space>%:p:h<CR>|
+              \     nmap <buffer> <silent><leader>f :CtrlP<space>%:p:h<CR>|
               \ endif
     augroup end
     " ---
-    nnoremap <leader>u :CtrlPQuickfix<CR>
-    nnoremap <leader>i :CtrlPChangeAll<CR>
-    nnoremap <leader>f :CtrlP<space>%:p:h<CR>
-    nnoremap <leader>h :CtrlPMRUFiles<CR>
-    nnoremap <leader>j :CtrlPBuffer<CR>
-    nnoremap <leader>k :CtrlPTag<CR>
-    nnoremap <leader>l :CtrlPLine<CR>
+    nnoremap <silent><leader>u :CtrlPQuickfix<CR>
+    nnoremap <silent><leader>i :CtrlPChangeAll<CR>
+    nnoremap <silent><leader>f :CtrlP<space>%:p:h<CR>
+    nnoremap <silent><leader>h :CtrlPMRUFiles<CR>
+    nnoremap <silent><leader>j :CtrlPBuffer<CR>
+    nnoremap <silent><leader>k :CtrlPTag<CR>
+    nnoremap <silent><leader>l :CtrlPLine<CR>
 endif
 " }}}
 
