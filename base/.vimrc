@@ -135,12 +135,12 @@ endfunction
 " ---
 function! s:CTags() abort
     if !executable('ctags')
-        echo 'ctags not found'
+        echo 'ctags: not found'
         return
     endif
     let l:root = <SID>RootDir()
     let l:cmd = printf(
-              \ 'ctags -R -f %s/tags'
+              \ 'ctags -R -n -f %s/tags'
               \ . ' --exclude=.git'
               \ . ' --exclude=.hg'
               \ . ' --exclude=.svn'
@@ -154,7 +154,7 @@ function! s:CTags() abort
           \ )
     silent! execute '!' . l:cmd . ' 2>/dev/null'
     redraw!|redrawstatus!|redrawtabline
-    echo 'ctags executed @ "' . l:root . '"'
+    echo 'ctags: executed @ "' . l:root . '"'
 endfunction
 " ---
 function! s:CopyClip() abort
@@ -164,25 +164,25 @@ function! s:CopyClip() abort
     let l:text = getreg(l:src)
     if (($XDG_SESSION_TYPE ==# 'x11') && exists('$DISPLAY')) && executable('xclip')
         call system('xclip -selection clipboard -in >/dev/null 2>&1', l:text)
-        echom printf('xcopied from register "%s"', l:reg ==# '"' ? 'unnamed' : l:reg)
+        echom printf('xclip: xcopied from register "%s"', l:reg ==# '"' ? 'unnamed' : l:reg)
         return
     elseif (($XDG_SESSION_TYPE ==# 'wayland') && exists('$WAYLAND_DISPLAY')) && executable('wl-copy')
         call system('wl-copy', l:text)
-        echom printf('wcopied from register "%s"', l:reg ==# '"' ? 'unnamed' : l:reg)
+        echom printf('wl-copy: wcopied from register "%s"', l:reg ==# '"' ? 'unnamed' : l:reg)
         return
     endif
-    echo 'xclip|wl-copy not found'
+    echo 'xclip|wl-copy: not found'
 endfunction
 " ---
 function! s:PastaClip() abort
     if (($XDG_SESSION_TYPE ==# 'x11') && exists('$DISPLAY')) && executable('xclip')
         let l:text = systemlist('xclip -selection clipboard -out')
-        let l:who = 'x'
+        let l:who = 'xclip: x'
     elseif (($XDG_SESSION_TYPE ==# 'wayland') && exists('$WAYLAND_DISPLAY')) && executable('wl-paste')
         let l:text = systemlist('wl-paste')
-        let l:who = 'w'
+        let l:who = 'wl-paste: w'
     else
-        echo 'xclip|wl-paste not found'
+        echo 'xclip|wl-paste: not found'
         return
     endif
     let l:ans = input('paste into register: ')|redraw!
@@ -206,7 +206,7 @@ function! s:ToggleWM() abort
             execute m . 'unmap <buffer> 0'
             execute m . 'unmap <buffer> $'
         endfor
-        echo 'wrapmotion off'
+        echo 'wrapmotion: off'
         return
     endif
     let b:wrapmotion = 1
@@ -219,7 +219,7 @@ function! s:ToggleWM() abort
         execute m . 'noremap <buffer> 0 g0'
         execute m . 'noremap <buffer> $ g$'
     endfor
-    echo 'wrapmotion on'
+    echo 'wrapmotion: on'
 endfunction
 " ---
 function! s:ToggleQF() abort
@@ -242,19 +242,19 @@ function! s:AddLineQF() abort
           \ }
     call add(l:qf_list, l:qf_entry)
     call setqflist(l:qf_list)
-    echo 'quickfix newline added'
+    echo 'quickfix: added newline'
 endfunction
 " ---
 function! s:ResetQF() abort
     call setqflist([])
-    echo 'quickfix resetted'
+    echo 'quickfix: resetted'
 endfunction
 " ---
 function! s:ResetSR() abort
     let @/=''
     while histdel('search', -1) > 0
     endwhile
-    echo 'search resetted'
+    echo 'search: resetted'
 endfunction
 " ---
 function! s:SSession() abort
@@ -268,18 +268,18 @@ function! s:SSession() abort
     let l:name = empty(l:ans) ? fnamemodify(l:root, ':t') : l:ans
     let l:dir = expand('~/.vim/sessiondir')
     if !isdirectory(l:dir)
-        echo 'sessiondir not present'
+        echo 'sessions: sessiondir not present'
         return
     endif
     silent! execute 'mksession! ' . fnameescape(l:dir . '/' . l:name)
-    echo 'session "' . l:name . '" saved'
+    echo 'sessions: "' . l:name . '" saved'
 endfunction
 " ---
 function! s:OSession() abort
     let l:dir = expand('~/.vim/sessiondir')
     let l:sessions = split(glob(l:dir . '/*'), '\n')
     if !isdirectory(l:dir) || empty(l:sessions)
-        echo 'no session saved'
+        echo 'sessions: no session saved'
         return
     endif
     let l:names = map(copy(l:sessions), 'fnamemodify(v:val, ":t")')
@@ -316,14 +316,14 @@ function! s:CleanBuffer() abort
     silent! %s/\n\+\%$//e
     call setpos('.', l:pos)
     silent! update
-    echo 'buffer cleaned'
+    echo 'cleanbuffer: "' . expand('%:p') . '" cleaned'
 endfunction
 " ---
 function! s:ExecScript(cmd, target) abort
     silent! call <SID>CleanBuffer()
     let l:target = expand(a:target)
     if empty(l:target)
-        echo 'empty target'
+        echo 'execscript: empty target'
         return
     endif
     execute a:cmd . ' ' . fnameescape(l:target)
@@ -331,7 +331,7 @@ endfunction
 " ---
 function! s:GitDiff() abort
     if system('git rev-parse --is-inside-work-tree 2>/dev/null') !=# "true\n"
-        echo '"' . getcwd() . '" is not in a git repo'
+        echo 'gitdiff: "' . getcwd() . '" not in git repo'
         return
     endif
     silent! call <SID>CleanBuffer()
@@ -341,13 +341,13 @@ endfunction
 function! s:KeywordLookup() abort
     let l:word = expand('<cword>')
     if empty(l:word)
-        echo 'empty search'
+        echo 'keywordLookup: empty search'
         return
     endif
     silent! execute '!' . &keywordprg . ' ' . shellescape(l:word) . ' >/dev/tty 2>/dev/null'
     redraw!|redrawstatus!|redrawtabline
     if v:shell_error != 0
-        echo '"' . l:word . '" not available'
+        echo 'keywordLookup: "' . l:word . '" not available'
     endif
 endfunction
 " }}}
@@ -524,18 +524,23 @@ xnoremap <silent><C-c> <Esc>
 snoremap <silent><C-c> <Esc>
 onoremap <silent><C-c> <Esc>
 " ---
-xnoremap <silent><expr> <localleader>h '<' . repeat('gv', v:count1)
-xnoremap <silent><expr> <localleader>l '>' . repeat('gv', v:count1)
-xnoremap <silent><expr> <localleader>j ':move<Space>''>+' . v:count1 . "<CR>gv=gv"
-xnoremap <silent><expr> <localleader>k ':move<Space>''<-' . (v:count1 + 1) . "<CR>gv=gv"
+noremap <silent><C-h> (
+noremap <silent><C-l> )
+noremap <silent><C-j> }
+noremap <silent><C-k> {
+" ---
+xnoremap <silent><expr> H '<' . repeat('gv', v:count1)
+xnoremap <silent><expr> L '>' . repeat('gv', v:count1)
+xnoremap <silent><expr> J ':move<Space>''>+' . v:count1 . "<CR>gv=gv"
+xnoremap <silent><expr> K ':move<Space>''<-' . (v:count1 + 1) . "<CR>gv=gv"
 " ---
 tnoremap <silent><C-q> <C-\><C-n>
 inoremap <silent><C-x><C-g> <C-x><C-]>
-nnoremap <silent><localleader>i <C-]>
-nnoremap <silent><localleader>o <C-t>
-nnoremap <silent><localleader>p :bprev<CR>
-nnoremap <silent><localleader>n :bnext<CR>
-nnoremap <silent><localleader>b :buffer#<CR>
+nnoremap <silent><C-p> :bprev<CR>
+nnoremap <silent><C-n> :bnext<CR>
+nnoremap <silent>ZI :buffer#<CR>
+nnoremap <silent>ZJ <C-]>
+nnoremap <silent>ZK <C-t>
 nnoremap <silent>ZO :tab<Space>split<CR>
 nnoremap <silent>ZU :update<BAR>silent!<Space>wviminfo<CR>
 nnoremap <silent>K <Nop>
