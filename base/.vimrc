@@ -478,8 +478,10 @@ augroup end
 augroup language_doc
     autocmd!
     autocmd FileType help,vim,sh,awk,c,cpp nnoremap <buffer> <silent>K K<CR>
-    autocmd FileType help,vim setlocal keywordprg=:help
-    autocmd FileType sh,awk setlocal keywordprg=man
+    autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
+    autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
+    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
+    autocmd FileType awk setlocal iskeyword+=_ keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
     autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
 augroup end
