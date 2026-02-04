@@ -31,11 +31,17 @@ endfunction
 augroup language_cmd
     autocmd FileType python nnoremap <buffer> <silent><leader>d :call <SID>Formatter('black', 'black')<CR>
     autocmd FileType python nnoremap <buffer> <silent><leader>x :ExecScript terminal\ ++curwin\ python3 %<CR>
+    " ---
+    autocmd FileType go nnoremap <buffer> <silent><leader>d :call <SID>Formatter('gofmt', 'gofmt -w')<CR>
+    autocmd FileType go nnoremap <buffer> <silent><leader>x :ExecScript terminal\ ++curwin\ go\ run %:p:h<CR>
 augroup end
 " ---
 augroup language_doc
-    autocmd FileType python nnoremap <buffer> <silent>K :KeywordLookup<CR>
-    autocmd FileType python setlocal keywordprg=pydoc
+    autocmd FileType python nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
+    " ---
+    autocmd FileType go nnoremap <buffer> <silent>K K
+    autocmd FileType go setlocal iskeyword+=.,/ keywordprg=go\ doc
 augroup end
 " }}}
 

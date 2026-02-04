@@ -337,19 +337,6 @@ function! s:GitDiff() abort
     silent! call <SID>CleanBuffer()
     execute '!git diff %'
 endfunction
-" ---
-function! s:KeywordLookup() abort
-    let l:word = expand('<cword>')
-    if empty(l:word)
-        echo 'keywordLookup: empty search'
-        return
-    endif
-    silent! execute '!' . &keywordprg . ' ' . shellescape(l:word) . ' >/dev/tty 2>/dev/null'
-    redraw!|redrawstatus!|redrawtabline
-    if v:shell_error != 0
-        echo 'keywordLookup: "' . l:word . '" not available'
-    endif
-endfunction
 " }}}
 
 
@@ -490,12 +477,11 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType vim,help nnoremap <buffer> <silent>K K
-    autocmd FileType sh,awk,c,cpp nnoremap <buffer> <silent>K :call <SID>KeywordLookup()<CR>
-    autocmd FileType vim,help setlocal keywordprg=:help
+    autocmd FileType help,vim,sh,awk,c,cpp nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim setlocal keywordprg=:help
     autocmd FileType sh,awk setlocal keywordprg=man
-    autocmd FileType c setlocal keywordprg=man\ 3
-    autocmd FileType cpp setlocal keywordprg=cppman
+    autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
+    autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
 augroup end
 " }}}
 
@@ -518,7 +504,6 @@ command! -nargs=0 ScratchBuffer call <SID>ScratchBuffer()
 command! -nargs=0 SSession call <SID>SSession()
 command! -nargs=0 OSession call <SID>OSession()
 command! -nargs=0 GitDiff call <SID>GitDiff()
-command! -nargs=0 KeywordLookup call <SID>KeywordLookup()
 " }}}
 
 
