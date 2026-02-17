@@ -29,8 +29,8 @@ function! s:Formatter(bin, cmd) abort
 endfunction
 " ---
 augroup language_cmd
-    autocmd FileType python nnoremap <buffer> <silent>ZS :call <SID>Formatter('black', 'black')<CR>
-    autocmd FileType python nnoremap <buffer> <silent>ZX :ExecScript terminal\ ++curwin\ python3 %<CR>
+    autocmd FileType python nnoremap <buffer> <silent><localleader>j :call <SID>Formatter('black', 'black')<CR>
+    autocmd FileType python nnoremap <buffer> <silent><localleader>k :ExecScript terminal\ ++curwin\ python3 %<CR>
 augroup end
 " ---
 augroup language_doc

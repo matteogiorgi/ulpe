@@ -471,7 +471,7 @@ augroup language_cmd
           \     ['sh', 'terminal ++curwin sh'],
           \     ['awk', 'terminal ++curwin awk -f'],
           \ ]
-        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent>ZX :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
+        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
     endfor
 augroup end
 " ---
