@@ -481,15 +481,12 @@ augroup language_cmd
           \     ['vim', 'source'],
           \     ['sh', 'terminal ++curwin sh'],
           \     ['awk', 'terminal ++curwin awk -f'],
-          \     ['scheme', 'terminal ++curwin scheme --script'],
           \     ['python', 'terminal ++curwin python3'],
-          \     ['javascript', 'terminal ++curwin node'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
     endfor
     for [ft, bin, cmd] in [
           \     ['python', 'black', 'black'],
-          \     ['javascript', 'prettier', 'prettier --write --tab-width 4 --print-width 120'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(''' . escape(bin, '''') . ''', ''' . escape(cmd, '''') . ''')<CR>'
     endfor
@@ -504,9 +501,7 @@ augroup language_doc
     autocmd FileType awk setlocal iskeyword+=_ keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
     autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
-    autocmd FileType scheme setlocal iskeyword+=-,?,!,*,+,/,<,>,=
     autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
-    autocmd FileType javascript setlocal iskeyword+=.
 augroup end
 " }}}
 
