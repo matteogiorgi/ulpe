@@ -16,32 +16,6 @@ let g:uplug = 1
 
 
 
-" Formatters {{{
-function! s:Formatter(bin, cmd) abort
-    if executable(a:bin)
-        silent! update
-        execute 'silent! !' . a:cmd . ' % >/dev/null 2>&1'
-        redraw!|redrawstatus!|redrawtabline
-        echo 'buffer formatted'
-        return
-    endif
-    CleanBuffer
-endfunction
-" ---
-augroup language_cmd
-    autocmd FileType python nnoremap <buffer> <silent><localleader>j :call <SID>Formatter('black', 'black')<CR>
-    autocmd FileType python nnoremap <buffer> <silent><localleader>k :ExecScript terminal\ ++curwin\ python3 %<CR>
-augroup end
-" ---
-augroup language_doc
-    autocmd FileType python nnoremap <buffer> <silent>K K<CR>
-    autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
-augroup end
-" }}}
-
-
-
-
 " Ctrlp {{{
 if &rtp =~ 'ctrlp'
     let g:ctrlp_map = ''

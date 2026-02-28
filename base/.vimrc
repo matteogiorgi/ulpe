@@ -329,6 +329,17 @@ function! s:ExecScript(cmd, target) abort
     execute a:cmd . ' ' . fnameescape(l:target)
 endfunction
 " ---
+function! s:Formatter(bin, cmd) abort
+    if executable(a:bin)
+        silent! update
+        execute 'silent! !' . a:cmd . ' % >/dev/null 2>&1'
+        redraw!|redrawstatus!|redrawtabline
+        echo 'buffer formatted'
+        return
+    endif
+    silent! call <SID>CleanBuffer()
+endfunction
+" ---
 function! s:GitDiff() abort
     if system('git rev-parse --is-inside-work-tree 2>/dev/null') !=# "true\n"
         echo 'gitdiff: "' . getcwd() . '" not in git repo'
@@ -470,20 +481,27 @@ augroup language_cmd
           \     ['vim', 'source'],
           \     ['sh', 'terminal ++curwin sh'],
           \     ['awk', 'terminal ++curwin awk -f'],
+          \     ['python', 'terminal ++curwin python3'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
+    endfor
+    for [ft, bin, cmd] in [
+          \     ['python', 'black', 'black'],
+          \ ]
+        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(''' . escape(bin, '''') . ''', ''' . escape(cmd, '''') . ''')<CR>'
     endfor
 augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,sh,awk,c,cpp nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,sh,awk,c,cpp,python nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType awk setlocal iskeyword+=_ keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
     autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
+    autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
 augroup end
 " }}}
 
@@ -496,6 +514,7 @@ command! -nargs=0 CopyClip call <SID>CopyClip()
 command! -nargs=0 PastaClip call <SID>PastaClip()
 command! -nargs=0 CleanBuffer call <SID>CleanBuffer()
 command! -nargs=+ -complete=shellcmd ExecScript call <SID>ExecScript(<f-args>)
+command! -nargs=+ -complete=shellcmd Formatter call <SID>Formatter(<f-args>)
 command! -nargs=0 ToggleQF call <SID>ToggleQF()
 command! -nargs=0 ToggleFC call <SID>ToggleFC()
 command! -nargs=0 ToggleWM call <SID>ToggleWM()

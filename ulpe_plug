@@ -65,7 +65,8 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git python3-full python3-pip python3-dev black python-is-python3"
+PACKAGES="git"
+# ---
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
         PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
