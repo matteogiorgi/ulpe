@@ -65,7 +65,7 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git"
+PACKAGES="git wget curl"
 # ---
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
