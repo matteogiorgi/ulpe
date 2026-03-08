@@ -235,6 +235,7 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias fgrep='grep -F'
 alias egrep='grep -E'
+# ---
 if [ "${XDG_SESSION_TYPE:-}" = 'x11' ] && [ -n "${DISPLAY:-}" ]; then
     alias xcopy='xclip -in -selection clipboard'
     alias xpasta='xclip -out -selection clipboard'
@@ -307,6 +308,4 @@ if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     export PATH="$PATH:$HOME/.local/bin"
 fi
 # ---
-if command -v fetch.sh &>/dev/null; then
-    fetch.sh 2>/dev/null
-fi
+fetch.sh 2>/dev/null
