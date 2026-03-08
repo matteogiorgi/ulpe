@@ -25,7 +25,7 @@ export VISUAL='/usr/bin/vi'
 
 if [ "${XDG_SESSION_TYPE:-}" = 'x11' ] && [ -n "${DISPLAY:-}" ]; then
     export TERM='xterm-256color'
-    command -v setxkbmap >/dev/null 2>&1 && setxkbmap -option 'caps:escape'
+    setxkbmap -option 'caps:escape' >/dev/null 2>&1
 fi
 
 
