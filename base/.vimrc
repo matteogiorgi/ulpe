@@ -479,13 +479,14 @@ augroup language_cmd
     autocmd!
     for [ft, cmd] in [
           \     ['vim', 'source'],
-          \     ['sh', 'terminal ++curwin sh'],
           \     ['awk', 'terminal ++curwin awk -f'],
+          \     ['sh', 'terminal ++curwin sh'],
           \     ['python', 'terminal ++curwin python3'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
     endfor
     for [ft, bin, cmd] in [
+          \     ['sh', 'shfmt', 'shfmt -ln posix -i 4 -ci -w'],
           \     ['python', 'black', 'black'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(''' . escape(bin, '''') . ''', ''' . escape(cmd, '''') . ''')<CR>'
@@ -494,11 +495,11 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,sh,awk,c,cpp,python nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,awk,sh,c,cpp,python nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
-    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType awk setlocal iskeyword+=_ keywordprg=man
+    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
     autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
     autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
