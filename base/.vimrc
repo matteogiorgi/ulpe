@@ -478,7 +478,6 @@ augroup end
 augroup language_cmd
     autocmd!
     for [ft, cmd] in [
-          \     ['vim', 'source'],
           \     ['awk', 'terminal ++curwin awk -f'],
           \     ['sh', 'terminal ++curwin sh'],
           \     ['python', 'terminal ++curwin python3'],
