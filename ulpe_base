@@ -15,24 +15,28 @@ sudo_privileges() {
 # ---
 ask_user() {
     printf "%s\n" "$1"
-    local ANS
-    read -r -p "wish to proceed anyway? [y/N] " ANS
+    ANS=
+    printf "%s" "wish to proceed anyway? [y/N] "
+    read -r ANS
     case "$ANS" in
         y | Y | yes | YES) printf "\n%s\n" "setup resumed";;
         *) printf "\n%s\n" "setup interrupted"; exit 1;;
     esac
 }
 # ---
-testing_setup() {
-    [ -s /etc/apt/sources.list ] && grep '^[^#]' /etc/apt/sources.list >/dev/null || return
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list.ulpe.bak 2>/dev/null || true
-    local REPO="deb https://deb.debian.org/debian testing main contrib non-free"
-    if ! grep -E \
-        '^[[:space:]]*deb[[:space:]]+https?://deb\.debian\.org/debian[[:space:]]+(testing|unstable)\b' \
+has_testing() {
+    grep -E \
+        '^[[:space:]]*deb[[:space:]]+https?://deb\.debian\.org/debian[[:space:]]+(testing|unstable)([[:space:]]|$)' \
         /etc/apt/sources.list \
         >/dev/null 2>&1
-    then
-        echo "$REPO" \
+}
+# ---
+testing_setup() {
+    [ -s /etc/apt/sources.list ] && grep '^[^#]' /etc/apt/sources.list >/dev/null || return
+    REPO="deb https://deb.debian.org/debian testing main contrib non-free non-free-firmware"
+    if ! has_testing; then
+        sudo cp /etc/apt/sources.list /etc/apt/sources.list.ulpe.bak 2>/dev/null || true
+        printf "%s\n" "$REPO" \
             | sudo tee -a /etc/apt/sources.list >/dev/null \
             && sudo cp "$SCRIPTPATH/base/preferences" "/etc/apt/" >/dev/null 2>&1
     fi
@@ -62,18 +66,18 @@ try_run() {
 }
 # ---
 store_conf() {
-    backup_conf () {
-        if [ -f "$1" ]; then
-            printf "%s" "removing '$1'"
-            if [ -L "$1" ]; then
-                try_run unlink "$1"
-            else
-                try_run mv "$1" "$RESTORE/"
-            fi
+    backup_conf() {
+        [ -e "$1" ] || [ -L "$1" ] || return
+        printf "%s" "removing '$1'"
+        if [ -L "$1" ]; then
+            try_run unlink "$1"
+        else
+            try_run mv "$1" "$2/"
         fi
     }
     # ---
-    local SCRIPT RESTORE="$HOME/.ulpe_recovery"
+    RESTORE="$HOME/.ulpe_recovery"
+    SCRIPT=
     mkdir -p "$RESTORE"
     printf "\n%s\n" "REMOVING BASE SCRIPTS"
     for SCRIPT in \
@@ -84,7 +88,7 @@ store_conf() {
         .tmux.conf \
         .local/bin/fetch.sh
     do
-        backup_conf "$HOME/$SCRIPT"
+        backup_conf "$HOME/$SCRIPT" "$RESTORE"
     done
 }
 
@@ -130,11 +134,14 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git wget curl bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard procps \
-x11-xkb-utils htop tree tmux vim exuberant-ctags wamerican build-essential cmake gcc-doc man-db cppman \
-manpages-dev pkg-config valgrind gdb strace ltrace shfmt python3-full python3-pip python3-dev black python-is-python3"
+STABLE_PACKAGES="git wget curl bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard \
+procps x11-xkb-utils htop tree tmux exuberant-ctags wamerican build-essential cmake gcc-doc \
+man-db cppman manpages-dev pkg-config valgrind gdb strace ltrace shfmt python3-full python3-pip \
+python3-dev black python-is-python3"
+TESTING_PACKAGES="vim"
+ALL_PACKAGES="$STABLE_PACKAGES $TESTING_PACKAGES"
 # ---
-for PKG in $PACKAGES; do
+for PKG in $ALL_PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
         PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
     fi
@@ -156,30 +163,50 @@ fi
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )" || exit 1
 if sudo_privileges; then
-    while IFS='' read -r OSRELEASELINE; do
-        case "$OSRELEASELINE" in
-            ID=debian | VERSION_ID=\"13\" | "VERSION=\"13 (trixie)\"") LINECOUNT=$(( ${LINECOUNT:-0} + 1 ));;
-            *) :;;
+    . /etc/os-release 2>/dev/null || exit 1
+    if [ "$ID" = "debian" ]; then
+        case ${VERSION_ID:-0} in
+            ''|*[!0-9]*) ;;
+            *)
+                [ "$VERSION_ID" -ge 12 ] && testing_setup
+                ;;
         esac
-        if [ "${LINECOUNT:-0}" -eq 3 ]; then
-            testing_setup
-            break
-        fi
-    done < /etc/os-release 2>/dev/null
+    fi
     # ---
-    sudo sh -c '
-        apt-get update &&
-        apt-get upgrade -qq -y --allow-downgrades &&
-        apt-get purge -qq -y vim-tiny || true
-        for PKG in "$@"; do
-            apt-get install -y -qq --no-install-recommends "$PKG" || true
-        done
-        apt-get -qq -y autoremove --purge &&
-        apt-get -qq -y autoclean
-    ' _ $PACKAGES || {
-        printf "\n%s\n" "packages installation failed"
-        exit 1
-    }
+    if has_testing; then
+        sudo sh -c '
+            STABLE_PACKAGES="$1"
+            TESTING_PACKAGES="$2"
+            apt-get update &&
+            apt-get upgrade -qq -y --allow-downgrades &&
+            { apt-get purge -qq -y vim-tiny || true; }
+            for PKG in $STABLE_PACKAGES; do
+                apt-get install -y -qq --no-install-recommends "$PKG" || true
+            done
+            for PKG in $TESTING_PACKAGES; do
+                apt-get install -y -qq --no-install-recommends -t testing "$PKG" || true
+            done
+            apt-get -qq -y autoremove --purge &&
+            apt-get -qq -y autoclean
+        ' _ "$STABLE_PACKAGES" "$TESTING_PACKAGES" || {
+            printf "\n%s\n" "packages installation failed"
+            exit 1
+        }
+    else
+        sudo sh -c '
+            apt-get update &&
+            apt-get upgrade -qq -y --allow-downgrades &&
+            { apt-get purge -qq -y vim-tiny || true; }
+            for PKG in "$@"; do
+                apt-get install -y -qq --no-install-recommends "$PKG" || true
+            done
+            apt-get -qq -y autoremove --purge &&
+            apt-get -qq -y autoclean
+        ' _ $ALL_PACKAGES || {
+            printf "\n%s\n" "packages installation failed"
+            exit 1
+        }
+    fi
 fi
 
 

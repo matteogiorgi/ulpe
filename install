@@ -8,6 +8,10 @@ set -eu
 #############
 
 run_installer() {
+    [ -f "$1" ] || {
+        printf "%s\n" "WARNING. '$1' not found."
+        exit 1
+    }
     chmod +x "$1" 2>/dev/null || :
     "$1"
 }
