@@ -229,7 +229,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ---
 alias lf='ls -CF'
 alias la='ls -A'
-alias ll='ls -alFtr'
+alias ll='ls -alFtrsh'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
