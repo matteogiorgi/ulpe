@@ -160,8 +160,13 @@ fkill() {
     command -v fzy &>/dev/null || return
     local FKILL
     if FKILL="$(ps --no-headers -H -u "$USER" -o pid,cmd | \fzy -p "$USER processes > ")"; then
-        local PROCPID="$(echo "$FKILL" | awk '{print $1}')"
-        local PROCCMD="$(echo "$FKILL" | awk '{$1=""; sub(/^ /, ""); print}')"
+        local PROCPID PROCCMD PROCSTART
+        PROCPID="$(echo "$FKILL" | awk '{print $1}')"
+        PROCCMD="$(echo "$FKILL" | awk '{$1=""; sub(/^ /, ""); print}')"
+        if ! PROCSTART="$(awk '{print $22}' "/proc/$PROCPID/stat" 2>/dev/null)"; then
+            echo "process '${PROCCMD:0:50}' no longer exists"
+            return 1
+        fi
         local FKILLSIGNAL
         if FKILLSIGNAL="$(printf " 0 SIGNULL\n 1 SIGHUP\n 2 SIGINT\n 3 SIGQUIT\n 4 SIGILL\n`
               ` 5 SIGTRAP\n 6 SIGABRT\n 7 SIGBUS\n 8 SIGFPE\n 9 SIGKILL\n10 SIGUSR1\n`
@@ -174,8 +179,13 @@ fkill() {
                 echo "process '${PROCCMD:0:50}' intact"
                 return 1
             fi
-            kill -s "${FKILLSIGNAL:0:2}" "$PROCPID"
-            echo "process '${PROCCMD:0:50}' signaled with ${FKILLSIGNAL:3}"
+            if [[ "$PROCSTART" != "$(awk '{print $22}' "/proc/$PROCPID/stat" 2>/dev/null)" ]]; then
+                echo "process '${PROCCMD:0:50}' no longer exists"
+                return 1
+            fi
+            if kill -s "${FKILLSIGNAL:0:2}" "$PROCPID"; then
+                echo "process '${PROCCMD:0:50}' signaled with ${FKILLSIGNAL:3}"
+            fi
         fi
     fi
 }

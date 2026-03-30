@@ -135,9 +135,8 @@ EOF
 ############
 
 STABLE_PACKAGES="git wget curl bash bash-completion fzy less file fd-find trash-cli xclip wl-clipboard \
-procps x11-xkb-utils htop tree tmux exuberant-ctags wamerican build-essential cmake gcc-doc \
-man-db cppman manpages-dev pkg-config valgrind gdb strace ltrace shfmt python3-full python3-pip \
-python3-dev black python-is-python3"
+procps x11-xkb-utils tmux exuberant-ctags wamerican build-essential cmake gcc-doc man-db cppman manpages-dev \
+pkg-config valgrind gdb strace ltrace shfmt python3-full python3-pip python3-dev black python-is-python3"
 TESTING_PACKAGES="vim"
 ALL_PACKAGES="$STABLE_PACKAGES $TESTING_PACKAGES"
 # ---
