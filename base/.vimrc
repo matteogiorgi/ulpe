@@ -478,13 +478,15 @@ augroup end
 augroup language_cmd
     autocmd!
     for [ft, cmd] in [
-          \     ['awk', 'terminal ++curwin awk -f'],
+          \     ['c', 'terminal ++curwin tcc -run'],
           \     ['sh', 'terminal ++curwin sh'],
           \     ['python', 'terminal ++curwin python3'],
+          \     ['awk', 'terminal ++curwin awk -f'],
           \ ]
         execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
     endfor
     for [ft, bin, cmd] in [
+          \     ['c', 'indent', 'indent -kr -nce -nut -i4 -l120'],
           \     ['sh', 'shfmt', 'shfmt -ln posix -i 4 -ci -w'],
           \     ['python', 'black', 'black'],
           \ ]
