@@ -107,8 +107,8 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 # ---
 if [ -d "$HOME/.ulpe_recovery" ]; then
-    printf "\n%s"   "WARNING. ULPE already set: remove ~/.ulpe_recovery directory"
-    printf "\n%s\n" "═══════  and run this script again."
+    printf "\n%s"   "WARNING: ULPE already set."
+    printf "\n%s\n" "Remove ~/.ulpe_recovery directory and run this script again."
     exit 1
 fi
 

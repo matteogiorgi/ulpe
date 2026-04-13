@@ -39,16 +39,16 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 # ---
 if ! command -v \git >/dev/null 2>&1; then
-    printf "\n%s"   "WARNING. Git not found: install Git and run this script"
-    printf "\n%s\n" "═══════  again."
+    printf "\n%s"   "WARNING: Git not found."
+    printf "\n%s\n" "Install Git and run this script again."
     exit 1
 fi
 # ---
 case "$(\vim --version 2>/dev/null | head -n1)" in
     *"Vi IMproved 9"*) ;;
     *)
-        printf "\n%s"   "WARNING. Vim9 not found: install Vim9 and run this script"
-        printf "\n%s\n" "═══════  again."
+        printf "\n%s"   "WARNING: Vim9 not found."
+        printf "\n%s\n" "Install Vim9 and run this script again."
         exit 1
         ;;
 esac
