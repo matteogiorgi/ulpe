@@ -53,7 +53,7 @@ endif
 syntax on
 filetype plugin indent on
 set background=dark
-silent! colorscheme lunaperche
+silent! colorscheme wildcharm
 " }}}
 
 
