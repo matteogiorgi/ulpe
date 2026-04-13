@@ -38,6 +38,12 @@ if [ "$(id -u)" -eq 0 ]; then
     exit 1
 fi
 # ---
+if ! command -v \git >/dev/null 2>&1; then
+    printf "\n%s"   "WARNING. Git not found: install Git and run this script"
+    printf "\n%s\n" "═══════  again."
+    exit 1
+fi
+# ---
 case "$(\vim --version 2>/dev/null | head -n1)" in
     *"Vi IMproved 9"*) ;;
     *)
@@ -66,41 +72,20 @@ EOF
 
 
 
-### Packages
-############
-
-PACKAGES="git wget curl"
-# ---
-for PKG in $PACKAGES; do
-    if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
-        PROBLEMS="${PROBLEMS:+$PROBLEMS }$PKG"
-    fi
-done
-# ---
-if [ -n "${PROBLEMS-}" ]; then
-    ask_user "these packages might cause issues: '$PROBLEMS'"
-fi
-# ---
-if ! sudo_privileges; then
-    ask_user "'$USER' does not have sudo privileges"
-fi
-
-
-
-
 ### Dependencies
 ################
 
+if ! sudo_privileges; then
+    ask_user "'$USER' does not have sudo privileges"
+fi
+# ---
 if sudo_privileges; then
     sudo sh -c '
         apt-get update &&
-        for PKG in "$@"; do
-            apt-get install -y -qq --no-install-recommends "$PKG"
-        done
         apt-get -qq -y autoremove --purge &&
         apt-get -qq -y autoclean
-    ' _ $PACKAGES || {
-        printf "\n%s\n" "packages installation failed"
+    ' || {
+        printf "\n%s\n" "packages maintenance failed"
         exit 1
     }
 fi
