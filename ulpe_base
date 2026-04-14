@@ -134,8 +134,8 @@ EOF
 ### Packages
 ############
 
-STABLE_PACKAGES="git wget curl dash bash bash-completion shfmt fzy less file fd-find trash-cli xclip wl-clipboard \
-procps x11-xkb-utils tmux exuberant-ctags wamerican tcc pcc build-essential gcc-doc man-db cppman manpages-dev pkg-config \
+STABLE_PACKAGES="git wget curl dash bash bash-completion shfmt fzy less file fd-find trash-cli xclip wl-clipboard procps \
+x11-xkb-utils tmux exuberant-ctags wamerican groff tcc pcc build-essential gcc-doc man-db cppman manpages-dev pkg-config \
 valgrind gdb strace ltrace indent python3-full python3-dev python3-pip pypy3 pypy3-dev pypy3-venv python-is-python3 black"
 TESTING_PACKAGES="vim"
 ALL_PACKAGES="$STABLE_PACKAGES $TESTING_PACKAGES"
