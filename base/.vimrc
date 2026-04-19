@@ -38,7 +38,7 @@ endif
 " Leaders, Caret & Linebreak {{{
 let g:mapleader = "\<Space>"
 let g:maplocalleader = "\\"
-let g:long_cc = '121,' .. join(range(121, 999), ',')
+let g:longcc = '121,' .. join(range(121, 999), ',')
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
 " ---
@@ -382,22 +382,27 @@ augroup end
 " ---
 augroup linenumber_prettyfier
     autocmd!
-    autocmd FileType help,qf setlocal nonumber norelativenumber
-    autocmd TerminalOpen * setlocal nonumber norelativenumber nobuflisted bufhidden=wipe
+    autocmd FileType help,qf
+          \ let b:noprettyline = 1|
+          \ setlocal nonumber norelativenumber
+    autocmd TerminalOpen *
+          \ let b:noprettyline = 1|
+          \ setlocal nonumber norelativenumber|
+          \ setlocal nobuflisted bufhidden=wipe
     autocmd BufWinEnter *
           \ if !get(b:, 'wrapmotion', 0) && &l:wrap|
           \     silent! call <SID>ToggleWM()|
           \ endif
     autocmd InsertEnter *
-          \ if &buftype ==# '' && index(['help', 'qf'], &filetype) < 0|
+          \ if !get(b:, 'noprettyline', 0)|
           \     if !get(b:, 'wrapmotion', 0)|
-          \         let &l:colorcolumn = g:long_cc|
+          \         let &l:colorcolumn = g:longcc|
           \     endif|
           \     setlocal number norelativenumber|
           \     setlocal nocursorline|
           \ endif
     autocmd InsertLeave *
-          \ if &buftype ==# '' && index(['help', 'qf'], &filetype) < 0|
+          \ if !get(b:, 'noprettyline', 0)|
           \     setlocal number relativenumber|
           \     setlocal colorcolumn= cursorline|
           \ endif
