@@ -38,6 +38,7 @@ endif
 " Leaders, Caret & Linebreak {{{
 let g:mapleader = "\<Space>"
 let g:maplocalleader = "\\"
+let g:long_cc = '121,' .. join(range(121, 999), ',')
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
 " ---
@@ -388,14 +389,18 @@ augroup linenumber_prettyfier
           \     silent! call <SID>ToggleWM()|
           \ endif
     autocmd InsertEnter *
-          \ if !get(b:, 'wrapmotion', 0)|
-          \     let &l:colorcolumn = '121,'.join(range(121, 999), ',')|
-          \ endif|
-          \ setlocal number norelativenumber|
-          \ setlocal nocursorline
+          \ if &buftype ==# '' && index(['help', 'qf'], &filetype) < 0|
+          \     if !get(b:, 'wrapmotion', 0)|
+          \         let &l:colorcolumn = g:long_cc|
+          \     endif|
+          \     setlocal number norelativenumber|
+          \     setlocal nocursorline|
+          \ endif
     autocmd InsertLeave *
-          \ setlocal number relativenumber|
-          \ setlocal colorcolumn= cursorline
+          \ if &buftype ==# '' && index(['help', 'qf'], &filetype) < 0|
+          \     setlocal number relativenumber|
+          \     setlocal colorcolumn= cursorline|
+          \ endif
     autocmd WinLeave *
           \ if mode() ==# 'i'|
           \     stopinsert|
