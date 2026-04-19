@@ -497,6 +497,7 @@ augroup language_cmd
     endfor
     for [ft, bin, cmd] in [
           \     ['c', 'indent', 'indent -kr -nce -nut -i4 -l120'],
+          \     ['cpp', 'indent', 'indent -kr -nce -nut -i4 -l120'],
           \     ['sh', 'shfmt', 'shfmt -ln posix -i 4 -ci -w'],
           \     ['python', 'black', 'black'],
           \ ]
