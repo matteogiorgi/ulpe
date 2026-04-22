@@ -22,8 +22,6 @@ To full install ULPE, lunch the two installers separately (as described below) o
 
 This script installs the basic packages and configures *Bash*, *Vim* and *Tmux* for you: just run `./ulpe_base` from the root of the repository, relaunch your terminal and you are good to go.
 
-> If you are running [*Trixie*](https://www.debian.org/releases/trixie/), the script adds [*Forky*](https://www.debian.org/releases/forky/) repository to your sources-list; for any other running version (older, testing or unstable), it just updates and upgrades your system instead.
-
 
 
 
