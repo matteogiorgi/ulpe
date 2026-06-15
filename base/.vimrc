@@ -509,11 +509,11 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,sh,c,python nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,c,sh,python nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
-    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
+    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
 augroup end
 " }}}
