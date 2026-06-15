@@ -488,32 +488,32 @@ augroup end
 augroup language_cmd
     autocmd!
     for [ft, cmd] in [
-          \     ['c', 'terminal ++curwin tcc -run'],
-          \     ['sh', 'terminal ++curwin sh'],
-          \     ['python', 'terminal ++curwin python3'],
-          \     ['awk', 'terminal ++curwin awk -f'],
+          \     ['c', '"terminal ++curwin tcc -run"'],
+          \     ['sh', 'get(b:, "is_bash", 0) ? "terminal ++curwin bash" : "terminal ++curwin sh"'],
+          \     ['python', '"terminal ++curwin python3"'],
           \ ]
-        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(''' . escape(cmd, '''') . ''', ''%'')<CR>'
+        execute 'autocmd FileType ' . ft
+              \ . ' nnoremap <buffer> <silent><localleader>k'
+              \ . ' :call <SID>ExecScript(eval(''' . escape(cmd, '''') . '''), ''%'')<CR>'
     endfor
     for [ft, bin, cmd] in [
-          \     ['c', 'indent', 'indent -kr -nce -nut -i4 -l120'],
-          \     ['cpp', 'indent', 'indent -kr -nce -nut -i4 -l120'],
-          \     ['sh', 'shfmt', 'shfmt -ln posix -i 4 -ci -w'],
-          \     ['python', 'black', 'black'],
+          \     ['c', 'indent', '"indent -kr -nce -nut -i4 -l120"'],
+          \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
+          \     ['python', 'black', '"black"'],
           \ ]
-        execute 'autocmd FileType ' . ft . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(''' . escape(bin, '''') . ''', ''' . escape(cmd, '''') . ''')<CR>'
+        execute 'autocmd FileType ' . ft
+              \ . ' nnoremap <buffer> <silent><localleader>j'
+              \ . ' :call <SID>Formatter(''' . escape(bin, '''') . ''', eval(''' . escape(cmd, '''') . '''))<CR>'
     endfor
 augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,awk,sh,c,cpp,python nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,sh,c,python nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
-    autocmd FileType awk setlocal iskeyword+=_ keywordprg=man
     autocmd FileType sh setlocal iskeyword+=- keywordprg=man
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
-    autocmd FileType cpp setlocal iskeyword+=:,. keywordprg=cppman
     autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
 augroup end
 " }}}
