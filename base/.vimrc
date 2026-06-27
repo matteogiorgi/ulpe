@@ -54,7 +54,7 @@ endif
 syntax on
 filetype plugin indent on
 set background=dark
-silent! colorscheme unokai
+silent! colorscheme sonokai
 " }}}
 
 
