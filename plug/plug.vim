@@ -52,4 +52,13 @@ if &rtp =~ 'sandwich'
 endif
 "}}}
 
+
+
+
+" Sonokai {{{
+if &rtp =~ 'sonokai'
+    colorscheme sonokai
+endif
+"}}}
+
 " vim: fdm=marker:sw=4:sts=4:et
