@@ -22,8 +22,8 @@ if &rtp =~ 'ctrlp'
     let g:ctrlp_clear_cache_on_exit = 0
     let g:ctrlp_show_hidden = 0
     let g:ctrlp_custom_ignore = {
-          \      'dir': '\v[\/]\.(git|hg|svn|mypy_cache)$',
-          \      'file': '\v\.(exe|so|dll)$'
+          \     'dir': '\v[\/]\.(git|hg|svn|mypy_cache)$',
+          \     'file': '\v\.(exe|so|dll)$'
           \ }
     " ---
     augroup netrw_prettyfier
@@ -58,6 +58,28 @@ endif
 " Sonokai {{{
 if &rtp =~ 'sonokai'
     colorscheme sonokai
+endif
+"}}}
+
+
+
+
+" Lightline {{{
+if &rtp =~ 'lightline'
+    set noshowmode
+    let g:lightline = {
+          \     'colorscheme': 'sonokai',
+          \     'active': {
+          \         'left': [ [ 'mode', 'paste' ],
+          \                   [ 'readonly', 'filename', 'modified' ] ],
+          \         'right': [ [ 'lineinfo' ],
+          \                    [ 'percent' ],
+          \                    [ 'filetype', 'charvaluehex' ] ]
+          \     },
+          \     'component': {
+          \         'charvaluehex': '0x%B'
+          \     },
+          \ }
 endif
 "}}}
 
