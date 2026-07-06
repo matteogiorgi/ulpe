@@ -141,17 +141,17 @@ function! s:CTags() abort
     endif
     let l:root = <SID>RootDir()
     let l:cmd = printf(
-              \ 'ctags -R -n -f %s/tags'
-              \ . ' --exclude=.git'
-              \ . ' --exclude=.hg'
-              \ . ' --exclude=.svn'
-              \ . ' --exclude=.mypy_cache'
-              \ . ' --exclude=__pycache__'
-              \ . ' --exclude=.venv'
-              \ . ' --exclude=node_modules'
-              \ . ' %s',
-              \ shellescape(l:root),
-              \ shellescape(l:root)
+          \     'ctags -R -n -f %s/tags'
+          \     . ' --exclude=.git'
+          \     . ' --exclude=.hg'
+          \     . ' --exclude=.svn'
+          \     . ' --exclude=.mypy_cache'
+          \     . ' --exclude=__pycache__'
+          \     . ' --exclude=.venv'
+          \     . ' --exclude=node_modules'
+          \     . ' %s',
+          \     shellescape(l:root),
+          \     shellescape(l:root)
           \ )
     silent! execute '!' . l:cmd . ' 2>/dev/null'
     redraw!|redrawstatus!|redrawtabline
@@ -235,11 +235,11 @@ endfunction
 function! s:AddLineQF() abort
     let l:qf_list = getqflist()
     let l:qf_entry = {
-              \ 'bufnr': bufnr('%'),
-              \ 'lnum': line('.'),
-              \ 'col': col('.'),
-              \ 'text': getline('.'),
-              \ 'filename': expand('%:p'),
+          \     'bufnr': bufnr('%'),
+          \     'lnum': line('.'),
+          \     'col': col('.'),
+          \     'text': getline('.'),
+          \     'filename': expand('%:p'),
           \ }
     call add(l:qf_list, l:qf_entry)
     call setqflist(l:qf_list)

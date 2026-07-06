@@ -71,7 +71,7 @@ if &rtp =~ 'lightline'
           \     'colorscheme': 'sonokai',
           \     'active': {
           \         'left': [ [ 'mode', 'paste' ],
-          \                   [ 'readonly', 'filename', 'modified' ] ],
+          \                   [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
           \         'right': [ [ 'lineinfo' ],
           \                    [ 'percent' ],
           \                    [ 'filetype', 'charvaluehex' ] ]
@@ -79,7 +79,30 @@ if &rtp =~ 'lightline'
           \     'component': {
           \         'charvaluehex': '0x%B'
           \     },
+          \     'component_function': {
+          \         'gitbranch': 'LightlineGitBranch'
+          \     },
           \ }
+    " ---
+    function! LightlineGitBranch() abort
+        let l:dir = expand('%:p:h')
+        if l:dir !=# get(b:, 'gitbranch_dir', '')
+            let b:gitbranch_dir = l:dir
+            let l:branch = substitute(system('git -C ' . shellescape(l:dir) . ' rev-parse --abbrev-ref HEAD 2>/dev/null'), '\n', '', '')
+            if v:shell_error != 0 || empty(l:branch)
+                let b:gitbranch_cache = ''
+            else
+                let l:dirty = !empty(system('git -C ' . shellescape(l:dir) . ' status --porcelain --untracked-files=no 2>/dev/null')) ? '*' : ''
+                let b:gitbranch_cache = ' ' . l:branch . l:dirty
+            endif
+        endif
+        return get(b:, 'gitbranch_cache', '')
+    endfunction
+    " ---
+    augroup lightline_gitbranch
+        autocmd!
+        autocmd FocusGained,BufEnter * unlet! b:gitbranch_dir
+    augroup end
 endif
 "}}}
 
