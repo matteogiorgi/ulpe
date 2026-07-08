@@ -490,7 +490,6 @@ augroup language_cmd
     for [ft, cmd] in [
           \     ['c', '"terminal ++curwin tcc -run"'],
           \     ['sh', 'get(b:, "is_bash", 0) ? "terminal ++curwin bash" : "terminal ++curwin sh"'],
-          \     ['python', '"terminal ++curwin python3"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k'
@@ -499,7 +498,6 @@ augroup language_cmd
     for [ft, bin, cmd] in [
           \     ['c', 'indent', '"indent -kr -nce -nut -i4 -l120"'],
           \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
-          \     ['python', 'black', '"black"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>j'
@@ -509,12 +507,11 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,c,sh,python nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,c,sh nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
     autocmd FileType sh setlocal iskeyword+=- keywordprg=man
-    autocmd FileType python setlocal iskeyword+=. keywordprg=pydoc
 augroup end
 " }}}
 
