@@ -296,19 +296,21 @@ function! s:ScratchBuffer() abort
         b#|return
     endif
     let target_buffer = bufnr('/tmp/scratchbuffer')
-    let target_window = bufwinnr(target_buffer)
-    if target_buffer != -1 && target_window != -1
-        silent! execute target_window . 'wincmd w'
-    else
-        edit /tmp/scratchbuffer
-        if &l:filetype !=# 'scratch'
-            setlocal filetype=scratch
+    if target_buffer != -1
+        let wins = win_findbuf(target_buffer)
+        if !empty(wins)
+            call win_gotoid(wins[0])
+            return
         endif
-        setlocal bufhidden=wipe
-        setlocal nobuflisted
-        setlocal noswapfile
-        setlocal nospell
     endif
+    edit /tmp/scratchbuffer
+    if &l:filetype !=# 'scratch'
+        setlocal filetype=scratch
+    endif
+    setlocal bufhidden=wipe
+    setlocal nobuflisted
+    setlocal noswapfile
+    setlocal nospell
 endfunction
 " ---
 function! s:CleanBuffer() abort
