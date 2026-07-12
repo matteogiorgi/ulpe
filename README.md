@@ -9,11 +9,11 @@ The purpose of this project is to provide a vim-loving, neckbeard-like, barebone
 
 ## Install
 
-The only prerequisite you need to cover is a working *Debian* in any version or form. There are two installers at your disposal to easy the setup process: [`ulpe_base`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_base) and [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug).
+The only prerequisite you need to cover is a working *Debian* in any version or form. There are two installers at your disposal to ease the setup process: [`ulpe_base`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_base) and [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug).
 
-> The installers do not symlink any file, they just copy the configurations in the right place, so they can be easily modified end eventually resetted running the single installer again.
+> The installers do not symlink any file, they just copy the configurations in the right place, so they can be easily modified and eventually reset running the single installer again.
 
-To full install ULPE, lunch the two installers separately (as described below) or just run the [`install`](https://github.com/matteogiorgi/ulpe/blob/main/install) script, it will execute both installers for you.
+To full install ULPE, launch the two installers separately (as described below) or just run the [`install`](https://github.com/matteogiorgi/ulpe/blob/main/install) script, it will execute both installers for you.
 
 
 
