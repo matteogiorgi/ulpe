@@ -287,7 +287,7 @@ function! s:OSession() abort
     let l:choice = inputlist(['select session:'] + map(copy(l:names), 'v:key+1 . ") " . v:val'))
     if l:choice > 0 && l:choice <= len(l:names)
         let l:path = l:sessions[l:choice - 1]
-        execute 'source' fnameescape(l:path)
+        silent! execute 'source' fnameescape(l:path)
     endif
 endfunction
 " ---
