@@ -139,7 +139,7 @@ fgit() {
     if FGIT="$(\git log --graph --format="%h%d %s %cr" "$@" | `
           `\fzy -p "$(pwd | sed "s|^$HOME|~|")$(git_branch "(%s)") > ")"; then
         FGIT="$(echo "$FGIT" | grep -o '[a-f0-9]\{7\}')"
-        \git diff "$FGIT"
+        \git show "$FGIT"
     fi
 }
 # ---

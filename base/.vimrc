@@ -349,7 +349,7 @@ function! s:GitDiff() abort
         return
     endif
     silent! call <SID>CleanBuffer()
-    execute '!git diff %'
+    execute '!git diff HEAD -- %'
 endfunction
 " }}}
 
