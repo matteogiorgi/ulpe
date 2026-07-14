@@ -365,10 +365,6 @@ augroup netrw_prettyfier
           \ setlocal bufhidden=wipe|
           \ setlocal nobuflisted|
           \ setlocal cursorline
-    autocmd VimEnter *
-          \ if !argc() && exists(':Explore')|
-          \     keepalt Explore|
-          \ endif
     let g:netrw_keepdir = 0
     let g:netrw_banner = 0
     let g:netrw_liststyle = 4
