@@ -579,6 +579,7 @@ nnoremap <silent><leader>s :ScratchBuffer<CR>
 nnoremap <silent><leader>d :CleanBuffer<CR>
 nnoremap <silent><leader>g :GitDiff<CR>
 nnoremap <silent><leader>z :ToggleFC<CR>
+nnoremap <silent><leader>x :Explore<CR>
 nnoremap <silent><leader>c :CopyClip<CR>
 nnoremap <silent><leader>v :PastaClip<CR>
 " }}}

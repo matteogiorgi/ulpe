@@ -103,8 +103,7 @@ set -- \
     "https://github.com/cohama/lexima.vim.git" \
     "https://github.com/wellle/context.vim.git" \
     "https://github.com/sainnhe/sonokai.git" \
-    "https://github.com/itchyny/lightline.vim.git" \
-    "https://github.com/matteogiorgi/vim-startscreen.git"
+    "https://github.com/itchyny/lightline.vim.git"
 # ---
 VIM=$HOME/.vim
 START="$VIM/pack/plug/start"
