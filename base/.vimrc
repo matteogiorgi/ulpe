@@ -313,6 +313,19 @@ function! s:ScratchBuffer() abort
     setlocal nospell
 endfunction
 " ---
+function! s:Explorer() abort
+    if &filetype ==# 'netrw'
+        if exists('w:netrw_prev_buf') && bufexists(w:netrw_prev_buf)
+            execute 'buffer' w:netrw_prev_buf
+        else
+            b#
+        endif
+        return
+    endif
+    let w:netrw_prev_buf = bufnr('%')
+    Explore
+endfunction
+" ---
 function! s:CleanBuffer() abort
     let l:pos = getpos('.')
     silent! %s/\s\+$//e
@@ -530,6 +543,7 @@ command! -nargs=0 AddLineQF call <SID>AddLineQF()
 command! -nargs=0 ResetQF call <SID>ResetQF()
 command! -nargs=0 ResetSR call <SID>ResetSR()
 command! -nargs=0 ScratchBuffer call <SID>ScratchBuffer()
+command! -nargs=0 Explorer call <SID>Explorer()
 command! -nargs=0 SSession call <SID>SSession()
 command! -nargs=0 OSession call <SID>OSession()
 command! -nargs=0 GitDiff call <SID>GitDiff()
@@ -569,7 +583,7 @@ tnoremap <silent>,, <C-\><C-n>
 " ---
 nnoremap <silent><leader>q :ToggleQF<CR>
 nnoremap <silent><leader>w :ToggleWM<CR>
-nnoremap <silent><leader>e :ResetSR<CR>
+nnoremap <silent><leader>e :Explorer<CR>
 nnoremap <silent><leader>r :ResetQF<CR>
 nnoremap <silent><leader>t :CTags<CR>
 nnoremap <silent><leader>o :OSession<CR>
@@ -579,7 +593,7 @@ nnoremap <silent><leader>s :ScratchBuffer<CR>
 nnoremap <silent><leader>d :CleanBuffer<CR>
 nnoremap <silent><leader>g :GitDiff<CR>
 nnoremap <silent><leader>z :ToggleFC<CR>
-nnoremap <silent><leader>x :Explore<CR>
+nnoremap <silent><leader>x :ResetSR<CR>
 nnoremap <silent><leader>c :CopyClip<CR>
 nnoremap <silent><leader>v :PastaClip<CR>
 " }}}
