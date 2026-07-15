@@ -526,7 +526,7 @@ augroup language_doc
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
-    autocmd FileType go setlocal iskeyword+=. keywordprg=go\ doc
+    autocmd FileType go setlocal iskeyword+=. keywordprg=sh\ -c\ 'go\ doc\ \"$0\"\ \|\ less'
     autocmd FileType sh setlocal iskeyword+=- keywordprg=man
 augroup end
 " }}}
