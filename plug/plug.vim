@@ -55,6 +55,19 @@ endif
 
 
 
+" Fugitive {{{
+if &rtp =~ 'fugitive'
+    imap <silent><C-s> <Plug>(copilot-suggest)
+    imap <silent><C-f> <Plug>(copilot-accept-word)
+    imap <silent><C-j> <Plug>(copilot-next)
+    imap <silent><C-k> <Plug>(copilot-previous)
+    imap <silent><C-l> <Plug>(copilot-accept-line)
+endif
+"}}}
+
+
+
+
 " Sonokai {{{
 if &rtp =~ 'sonokai'
     colorscheme sonokai

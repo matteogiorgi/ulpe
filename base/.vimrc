@@ -500,7 +500,9 @@ augroup language_cmd
     autocmd!
     for [ft, cmd] in [
           \     ['c', '"terminal ++curwin tcc -run"'],
+          \     ['go', '"terminal ++curwin go run"'],
           \     ['sh', 'get(b:, "is_bash", 0) ? "terminal ++curwin bash" : "terminal ++curwin sh"'],
+          \     ['javascript', '"terminal ++curwin node"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k'
@@ -508,7 +510,9 @@ augroup language_cmd
     endfor
     for [ft, bin, cmd] in [
           \     ['c', 'indent', '"indent -kr -nce -nut -i4 -l120"'],
+          \     ['go', 'gofmt', '"gofmt -w"'],
           \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
+          \     ['javascript', 'prettier', '"prettier --write --tab-width 4 --print-width 120"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>j'
@@ -518,10 +522,11 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,c,sh nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim,c,go,sh nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
+    autocmd FileType go setlocal iskeyword+=. keywordprg=go\ doc
     autocmd FileType sh setlocal iskeyword+=- keywordprg=man
 augroup end
 " }}}
