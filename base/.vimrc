@@ -503,6 +503,7 @@ augroup language_cmd
           \     ['go', '"terminal ++curwin go run"'],
           \     ['sh', 'get(b:, "is_bash", 0) ? "terminal ++curwin bash" : "terminal ++curwin sh"'],
           \     ['javascript', '"terminal ++curwin node"'],
+          \     ['r', '"terminal ++curwin Rscript"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k'
@@ -513,6 +514,7 @@ augroup language_cmd
           \     ['go', 'gofmt', '"gofmt -w"'],
           \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
           \     ['javascript', 'prettier', '"prettier --write --tab-width 4 --print-width 120"'],
+          \     ['r', 'Rscript', '"Rscript -e \"styler::style_file(commandArgs(TRUE)[1], transformers=styler::tidyverse_style(indent_by=4))\""'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>j'
@@ -530,6 +532,7 @@ augroup language_doc
           \     ['sh', 'sh', '-'],
           \     ['go', 'go', '.'],
           \     ['javascript', 'js', '.'],
+          \     ['r', 'r', '.'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' setlocal keywordprg=kdoc.sh\ ' . arg

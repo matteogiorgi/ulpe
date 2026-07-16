@@ -49,3 +49,17 @@ sh -c '
     echo "finish"
 '
 ```
+
+
+
+
+## Extras
+
+Since this environment is ment to be used inside a terminal, you may want to install a few extra programs to make your life easier. You don't need much, just a couple of tools to make your terminal experience more pleasant.
+- **Terminal emulators**
+    + [**Rio Terminal**](https://rioterm.com): minimal terminal emulator with the right features, very fast, and easy to setup.
+    + [**Xfce4-Terminal**](https://docs.xfce.org/apps/terminal/start): feature-rich terminal emulator, with a GUI config and a lot of options to choose from.
+- **AI assistant**
+    + [**Open Code**](https://opencode.ai): AI assistant with both great CLI/GUI, lots of models to choose from and LSP support.
+    + [**Claude Code**](https://claude.com/product/claude-code): Claude AI assistant with CLI/GUI, it integrates excellently with Claude's LLM.
+    + [**Copilot CLI**](https://github.com/features/copilot/cli): GitHub AI assistant for the command line, simple and easy to use.
