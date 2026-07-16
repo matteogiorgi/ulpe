@@ -157,11 +157,12 @@ for SCRIPT in \
     .bash_logout \
     .vimrc \
     .tmux.conf \
-    fetch.sh
+    fetch.sh \
+    kdoc.sh
 do
     printf "%s" "copying '$SCRIPT'"
     case $SCRIPT in
-        fetch.sh)
+        fetch.sh|kdoc.sh)
             mkdir -p "$HOME/.local/bin/" >/dev/null 2>&1 || continue
             try_run cp "$SCRIPTPATH/base/$SCRIPT" "$HOME/.local/bin/"
             ;;

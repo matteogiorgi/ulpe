@@ -522,12 +522,21 @@ augroup end
 " ---
 augroup language_doc
     autocmd!
-    autocmd FileType help,vim,c,go,sh nnoremap <buffer> <silent>K K<CR>
+    autocmd FileType help,vim nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
-    autocmd FileType c setlocal iskeyword+=. keywordprg=man\ 3
-    autocmd FileType go setlocal iskeyword+=. keywordprg=sh\ -c\ 'go\ doc\ \"$0\"\ \|\ less'
-    autocmd FileType sh setlocal iskeyword+=- keywordprg=man
+    for [ft, arg, kw] in [
+          \     ['c', 'c', '.'],
+          \     ['sh', 'sh', '-'],
+          \     ['go', 'go', '.'],
+          \     ['javascript', 'js', '.'],
+          \ ]
+        execute 'autocmd FileType ' . ft
+              \ . ' setlocal keywordprg=kdoc.sh\ ' . arg
+              \ . ' iskeyword+=' . kw
+        execute 'autocmd FileType ' . ft
+              \ . ' nnoremap <buffer> <silent>K K<CR>'
+    endfor
 augroup end
 " }}}
 
