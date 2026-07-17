@@ -513,7 +513,7 @@ augroup language_cmd
           \     ['c', 'indent', '"indent -kr -nce -nut -i4 -l120"'],
           \     ['go', 'gofmt', '"gofmt -w"'],
           \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
-          \     ['javascript', 'prettier', '"prettier --write --tab-width 4 --print-width 120"'],
+          \     ['javascript,json,jsonc', 'prettier', '"prettier --write --tab-width 4 --print-width 120"'],
           \     ['r', 'Rscript', '"Rscript -e \"styler::style_file(commandArgs(TRUE)[1], transformers=styler::tidyverse_style(indent_by=4))\""'],
           \ ]
         execute 'autocmd FileType ' . ft
