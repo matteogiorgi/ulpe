@@ -68,7 +68,7 @@ fexplore() {
                 continue
             fi
             case "$(file --mime-type "$FEXPLORE" -bL)" in
-                text/* | application/json) "${EDITOR:=/usr/bin/vi}" "$FEXPLORE";;
+                text/* | application/javascript | application/json) "${EDITOR:=/usr/bin/vi}" "$FEXPLORE";;
                 *) xdg-open "$FEXPLORE" &>/dev/null;;
             esac
         done
@@ -86,7 +86,7 @@ ffind() {
           `\fzy -p "$(pwd | sed "s|^$HOME|~|")$(git_branch "(%s)") > ")"
     [[ -f "$FFIND" ]] || return
     case "$(file --mime-type "$FFIND" -bL)" in
-        text/* | application/json) "${EDITOR:=/usr/bin/vi}" "$FFIND";;
+        text/* | application/javascript | application/json) "${EDITOR:=/usr/bin/vi}" "$FFIND";;
         *) xdg-open "$FFIND" &>/dev/null;;
     esac
 }
