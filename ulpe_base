@@ -164,7 +164,7 @@ for SCRIPT in \
 do
     printf "%s" "copying '$SCRIPT'"
     case $SCRIPT in
-        fetch.sh|kdoc.sh)
+        fetch.sh|kdoc.sh|kfmt.sh|krun.sh)
             mkdir -p "$HOME/.local/bin/" >/dev/null 2>&1 || continue
             try_run cp "$SCRIPTPATH/base/$SCRIPT" "$HOME/.local/bin/"
             ;;
