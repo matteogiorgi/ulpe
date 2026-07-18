@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # kdoc.sh — documentation dispatcher for Vim's K
-# usage: kdoc.sh {c|sh|go|js} symbol
+# usage: kdoc.sh {c|go|sh|js|r} symbol
 
 # PAGER
 page() {
@@ -16,7 +16,7 @@ doc_c() {
 
 # GO HANDLER
 doc_go() {
-    command -v go >/dev/null 2>&1 || return 0
+    command -v go >/dev/null 2>&1 || return 1
     go doc "$1" 2>/dev/null | page
 }
 
@@ -27,7 +27,7 @@ doc_sh() {
 
 # JS HANDLER
 doc_js() {
-    command -v node >/dev/null 2>&1 || return 0
+    command -v node >/dev/null 2>&1 || return 1
     node -e '
 const id = process.argv[1];
 let obj;
@@ -48,18 +48,25 @@ if (obj !== null && (typeof obj === "object" || typeof obj === "function")) {
 
 # R HANDLER
 doc_r() {
-    command -v Rscript >/dev/null 2>&1 || return 0
-    Rscript --vanilla -e "h <- help(\"$1\"); if (length(h)) { options(pager=\"cat\"); print(h) }" 2>/dev/null | page
+    command -v Rscript >/dev/null 2>&1 || return 1
+    Rscript --vanilla -e '
+args <- commandArgs(TRUE)
+h <- help(args[1])
+if (length(h)) {
+    options(pager = "cat")
+    print(h)
+}
+' "$1" 2>/dev/null | page
 }
 
 # OUTPUT
-[ -n "$2" ] || exit 0
+[ -n "$2" ] || exit 1
 case "$1" in
     c) doc_c "$2" ;;
-    sh) doc_sh "$2" ;;
     go) doc_go "$2" ;;
+    sh) doc_sh "$2" ;;
     js) doc_js "$2" ;;
     r) doc_r "$2" ;;
-    *) exit 0 ;;
+    *) exit 1 ;;
 esac
 exit 0

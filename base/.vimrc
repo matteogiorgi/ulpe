@@ -335,21 +335,21 @@ function! s:CleanBuffer() abort
     echo 'cleanbuffer: "' . expand('%:p') . '" cleaned'
 endfunction
 " ---
-function! s:ExecScript(cmd, target) abort
+function! s:ExecScript(arg, target) abort
     silent! call <SID>CleanBuffer()
     let l:target = expand(a:target)
     if empty(l:target)
         echo 'execscript: empty target'
         return
     endif
-    execute a:cmd . ' ' . fnameescape(l:target)
+    execute 'terminal ++curwin krun.sh ' . a:arg . ' ' . fnameescape(l:target)
 endfunction
 " ---
-function! s:Formatter(bin, cmd) abort
-    if executable(a:bin)
-        silent! update
-        execute 'silent! !' . a:cmd . ' % >/dev/null 2>&1'
-        redraw!|redrawstatus!|redrawtabline
+function! s:Formatter(arg) abort
+    silent! update
+    execute 'silent! !kfmt.sh ' . a:arg . ' % >/dev/null 2>&1'
+    redraw!|redrawstatus!|redrawtabline
+    if v:shell_error == 0
         echo 'buffer formatted'
         return
     endif
@@ -498,27 +498,27 @@ augroup end
 " ---
 augroup language_cmd
     autocmd!
-    for [ft, cmd] in [
-          \     ['c', '"terminal ++curwin tcc -run"'],
-          \     ['go', '"terminal ++curwin go run"'],
-          \     ['sh', 'get(b:, "is_bash", 0) ? "terminal ++curwin bash" : "terminal ++curwin sh"'],
-          \     ['javascript', '"terminal ++curwin node"'],
-          \     ['r', '"terminal ++curwin Rscript"'],
+    for [ft, arg] in [
+          \     ['c', '"c"'],
+          \     ['go', '"go"'],
+          \     ['sh', 'get(b:, "is_bash", 0) ? "bash" : "sh"'],
+          \     ['javascript', '"js"'],
+          \     ['r', '"r"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k'
-              \ . ' :call <SID>ExecScript(eval(''' . escape(cmd, '''') . '''), ''%'')<CR>'
+              \ . ' :call <SID>ExecScript(eval(''' . escape(arg, '''') . '''), ''%'')<CR>'
     endfor
-    for [ft, bin, cmd] in [
-          \     ['c', 'indent', '"indent -kr -nce -nut -i4 -l120"'],
-          \     ['go', 'gofmt', '"gofmt -w"'],
-          \     ['sh', 'shfmt', 'get(b:, "is_bash", 0) ? "shfmt -ln bash -i 4 -ci -w" : "shfmt -ln posix -i 4 -ci -w"'],
-          \     ['javascript,json,jsonc', 'prettier', '"prettier --write --tab-width 4 --print-width 120"'],
-          \     ['r', 'Rscript', '"Rscript -e \"styler::style_file(commandArgs(TRUE)[1], transformers=styler::tidyverse_style(indent_by=4))\""'],
+    for [ft, arg] in [
+          \     ['c', '"c"'],
+          \     ['go', '"go"'],
+          \     ['sh', 'get(b:, "is_bash", 0) ? "bash" : "sh"'],
+          \     ['javascript,json,jsonc', '"js"'],
+          \     ['r', '"r"'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>j'
-              \ . ' :call <SID>Formatter(''' . escape(bin, '''') . ''', eval(''' . escape(cmd, '''') . '''))<CR>'
+              \ . ' :call <SID>Formatter(eval(''' . escape(arg, '''') . '''))<CR>'
     endfor
 augroup end
 " ---

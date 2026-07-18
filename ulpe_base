@@ -158,7 +158,9 @@ for SCRIPT in \
     .vimrc \
     .tmux.conf \
     fetch.sh \
-    kdoc.sh
+    kdoc.sh \
+    kfmt.sh \
+    krun.sh
 do
     printf "%s" "copying '$SCRIPT'"
     case $SCRIPT in
