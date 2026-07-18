@@ -65,7 +65,7 @@ case "$1" in
     c) doc_c "$2" ;;
     go) doc_go "$2" ;;
     sh) doc_sh "$2" ;;
-    js) doc_js "$2" ;;
+    javascript | json | jsonc) doc_js "$2" ;;
     r) doc_r "$2" ;;
     *) exit 1 ;;
 esac

@@ -335,9 +335,9 @@ function! s:CleanBuffer() abort
     echo 'cleanbuffer: "' . expand('%:p') . '" cleaned'
 endfunction
 " ---
-function! s:ExecScript(arg, target) abort
+function! s:ExecScript(arg) abort
     silent! call <SID>CleanBuffer()
-    let l:target = expand(a:target)
+    let l:target = expand('%')
     if empty(l:target)
         echo 'execscript: empty target'
         return
@@ -496,47 +496,26 @@ augroup viminfo_sync
     autocmd TextYankPost * silent! wviminfo
 augroup end
 " ---
-augroup language_cmd
-    autocmd!
-    for [ft, arg] in [
-          \     ['c', '"c"'],
-          \     ['go', '"go"'],
-          \     ['sh', 'get(b:, "is_bash", 0) ? "bash" : "sh"'],
-          \     ['javascript', '"js"'],
-          \     ['r', '"r"'],
-          \ ]
-        execute 'autocmd FileType ' . ft
-              \ . ' nnoremap <buffer> <silent><localleader>k'
-              \ . ' :call <SID>ExecScript(eval(''' . escape(arg, '''') . '''), ''%'')<CR>'
-    endfor
-    for [ft, arg] in [
-          \     ['c', '"c"'],
-          \     ['go', '"go"'],
-          \     ['sh', 'get(b:, "is_bash", 0) ? "bash" : "sh"'],
-          \     ['javascript,json,jsonc', '"js"'],
-          \     ['r', '"r"'],
-          \ ]
-        execute 'autocmd FileType ' . ft
-              \ . ' nnoremap <buffer> <silent><localleader>j'
-              \ . ' :call <SID>Formatter(eval(''' . escape(arg, '''') . '''))<CR>'
-    endfor
-augroup end
-" ---
-augroup language_doc
+augroup language_env
     autocmd!
     autocmd FileType help,vim nnoremap <buffer> <silent>K K<CR>
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
-    for [ft, arg, kw] in [
-          \     ['c', 'c', '.'],
-          \     ['sh', 'sh', '-'],
-          \     ['go', 'go', '.'],
-          \     ['javascript', 'js', '.'],
-          \     ['r', 'r', '.'],
+    for [ft, kw] in [
+          \     ['c', '.'],
+          \     ['go', '.'],
+          \     ['sh', '-'],
+          \     ['javascript,json,jsonc', '.'],
+          \     ['r', '.'],
           \ ]
         execute 'autocmd FileType ' . ft
-              \ . ' setlocal keywordprg=kdoc.sh\ ' . arg
-              \ . ' iskeyword+=' . kw
+              \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>'
+        execute 'autocmd FileType ' . ft
+              \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>'
+        execute 'autocmd FileType ' . ft
+              \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")'
+        execute 'autocmd FileType ' . ft
+              \ . ' setlocal iskeyword+=' . kw
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent>K K<CR>'
     endfor
@@ -551,8 +530,8 @@ command! -nargs=0 CTags call <SID>CTags()
 command! -nargs=0 CopyClip call <SID>CopyClip()
 command! -nargs=0 PastaClip call <SID>PastaClip()
 command! -nargs=0 CleanBuffer call <SID>CleanBuffer()
-command! -nargs=+ -complete=shellcmd ExecScript call <SID>ExecScript(<f-args>)
-command! -nargs=+ -complete=shellcmd Formatter call <SID>Formatter(<f-args>)
+command! -nargs=+ ExecScript call <SID>ExecScript(<f-args>)
+command! -nargs=1 Formatter call <SID>Formatter(<f-args>)
 command! -nargs=0 ToggleQF call <SID>ToggleQF()
 command! -nargs=0 ToggleFC call <SID>ToggleFC()
 command! -nargs=0 ToggleWM call <SID>ToggleWM()
