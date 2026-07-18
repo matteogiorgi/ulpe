@@ -55,8 +55,8 @@ endif
 
 
 
-" Fugitive {{{
-if &rtp =~ 'fugitive'
+" Copilot {{{
+if &rtp =~ 'copilot'
     imap <silent><C-s> <Plug>(copilot-suggest)
     imap <silent><C-f> <Plug>(copilot-accept-word)
     imap <silent><C-j> <Plug>(copilot-next)
