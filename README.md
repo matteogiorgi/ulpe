@@ -80,7 +80,7 @@ esac
 
 ### `kfmt.sh`
 
-Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing. *Octave* has no standard formatter, so this uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go* for the occasion:
+Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing. *Octave* has no standard formatter, so this uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
 ```sh
 # OCTAVE HANDLER
 fmt_octave() {
