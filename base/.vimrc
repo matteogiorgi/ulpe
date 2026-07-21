@@ -509,14 +509,10 @@ augroup language_env
           \     ['r', '.'],
           \ ]
         execute 'autocmd FileType ' . ft
-              \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>'
-        execute 'autocmd FileType ' . ft
-              \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>'
-        execute 'autocmd FileType ' . ft
-              \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")'
-        execute 'autocmd FileType ' . ft
-              \ . ' setlocal iskeyword+=' . kw
-        execute 'autocmd FileType ' . ft
+              \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
+              \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>|'
+              \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")|'
+              \ . ' setlocal iskeyword+=' . kw . '|'
               \ . ' nnoremap <buffer> <silent>K K<CR>'
     endfor
 augroup end

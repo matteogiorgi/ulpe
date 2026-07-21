@@ -55,7 +55,7 @@ sh -c '
 
 ## Adding a language
 
-*Execute*, *format* and *doc lookup* for a filetype are wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support a new language you add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Octave* looks like.
+For predetermined filetypes, *Vim* can be configured to lookup-doc, format and execute the current file with a single keystroke and everything is wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Octave* looks like.
 
 
 ### `kdoc.sh`
@@ -123,22 +123,14 @@ esac
 Finally, plug the *Vim* filetype into the `language_env` augroup so `<localleader>k` runs it, `<localleader>j` formats it and `K` looks up documentation via `kdoc.sh`:
 ```vim
 for [ft, kw] in [
-      \     ['c', '.'],
-      \     ['go', '.'],
-      \     ['sh', '-'],
-      \     ['javascript,json,jsonc', '.'],
-      \     ['r', '.'],
+      ...
       \     ['matlab,octave', '.'],
       \ ]
     execute 'autocmd FileType ' . ft
-          \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>'
-    execute 'autocmd FileType ' . ft
-          \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>'
-    execute 'autocmd FileType ' . ft
-          \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")'
-    execute 'autocmd FileType ' . ft
-          \ . ' setlocal iskeyword+=' . kw
-    execute 'autocmd FileType ' . ft
+          \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
+          \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>|'
+          \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")|'
+          \ . ' setlocal iskeyword+=' . kw . '|'
           \ . ' nnoremap <buffer> <silent>K K<CR>'
 endfor
 ```
