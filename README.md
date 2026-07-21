@@ -134,5 +134,3 @@ for [ft, kw] in [
           \ . ' nnoremap <buffer> <silent>K K<CR>'
 endfor
 ```
-
-> `ft` is the value(s) of `&filetype` as *Vim* sets it (comma-separated if more than one filetype should share the same handler), and it's exactly the string passed as `$1` to the three dispatcher scripts above, so keep them in sync. `kw` extends `iskeyword` for that filetype, so that `K` under the cursor grabs the whole symbol (e.g. `-` for shell flags like `-n`, `.` for dotted names).
