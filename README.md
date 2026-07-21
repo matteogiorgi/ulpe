@@ -49,3 +49,98 @@ sh -c '
     echo "finish"
 '
 ```
+
+
+
+
+## Adding a language
+
+*Execute*, *format* and *doc lookup* for a filetype are wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support a new language you add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Octave* looks like.
+
+
+### `kdoc.sh`
+
+A `doc_<lang>` function that prints documentation for a symbol, piped through the `page` helper when the output can be long:
+```sh
+# OCTAVE HANDLER
+doc_octave() {
+    command -v octave >/dev/null 2>&1 || return 1
+    octave --quiet --norc --eval "more off; help('$1');" 2>/dev/null | page
+}
+
+# OUTPUT
+[ -n "$2" ] || exit 1
+case "$1" in
+    ...
+    matlab | octave) doc_octave "$2" ;;
+    *) exit 1 ;;
+esac
+```
+
+
+### `kfmt.sh`
+
+Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing. *Octave* has no standard formatter, so this uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go* for the occasion:
+```sh
+# OCTAVE HANDLER
+fmt_octave() {
+    command -v octfmt >/dev/null 2>&1 || return 1
+    octfmt -w "$1" 2>/dev/null
+}
+
+# OUTPUT
+[ -n "$2" ] || exit 1
+case "$1" in
+    ...
+    matlab | octave) fmt_octave "$2" ;;
+    *) exit 1 ;;
+esac
+```
+
+
+### `krun.sh`
+
+Add a `run_<lang>` function and a matching case, mirroring the existing handlers (`exec` so the terminal buffer is replaced by the child process):
+```sh
+# OCTAVE HANDLER
+run_octave() {
+    command -v octave >/dev/null 2>&1 || return 1
+    exec octave "$1"
+}
+
+# OUTPUT
+[ -n "$2" ] || exit 1
+case "$1" in
+    ...
+    matlab | octave) run_octave "$2" ;;
+    *) exit 1 ;;
+esac
+```
+
+
+### `.vimrc`
+
+Finally, plug the *Vim* filetype into the `language_env` augroup so `<localleader>k` runs it, `<localleader>j` formats it and `K` looks up documentation via `kdoc.sh`:
+```vim
+for [ft, kw] in [
+      \     ['c', '.'],
+      \     ['go', '.'],
+      \     ['sh', '-'],
+      \     ['javascript,json,jsonc', '.'],
+      \     ['r', '.'],
+      \     ['matlab,octave', '.'],
+      \ ]
+    execute 'autocmd FileType ' . ft
+          \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>'
+    execute 'autocmd FileType ' . ft
+          \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>'
+    execute 'autocmd FileType ' . ft
+          \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")'
+    execute 'autocmd FileType ' . ft
+          \ . ' setlocal iskeyword+=' . kw
+    execute 'autocmd FileType ' . ft
+          \ . ' nnoremap <buffer> <silent>K K<CR>'
+endfor
+```
+
+> `ft` is the value(s) of `&filetype` as *Vim* sets it (comma-separated if more than one filetype should share the same handler), and it's exactly the string passed as `$1` to the three dispatcher scripts above, so keep them in sync. `kw` extends `iskeyword` for that filetype, so that `K` under the cursor grabs the whole symbol (e.g. `-` for shell flags like `-n`, `.` for dotted names).
