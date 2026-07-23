@@ -102,8 +102,9 @@ EOF
 
 PACKAGES="git wget curl ssh parted 7zip util-linux dash bash bash-completion shfmt fzy less file lazygit btop \
 fd-find trash-cli xclip wl-clipboard man-db glibc-doc manpages-dev manpages-posix manpages-posix-dev procps \
-x11-xkb-utils tmux vim universal-ctags wamerican groff gawk build-essential tcc pcc gdb nasm yasm binutils \
-linux-perf strace ltrace pkg-config valgrind indent gcc-doc golang nodejs nodejs-doc npm r-base r-base-dev"
+x11-xkb-utils tmux vim universal-ctags wamerican groff gawk gawk-doc info build-essential tcc pcc gdb nasm yasm \
+binutils linux-perf strace ltrace pkg-config valgrind indent gcc-doc golang guile-3.0 guile-3.0-doc \
+r-base r-base-dev nodejs nodejs-doc npm"
 # ---
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then

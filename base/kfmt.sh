@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # kfmt.sh — formatter dispatcher for Vim
-# usage: kfmt.sh {c|go|sh|js|r} file
+# usage: kfmt.sh {c|go|sh|awk|r|js} file
 # exit: 0 if formatted, 1 otherwise
 
 # C HANDLER
@@ -25,10 +25,14 @@ fmt_sh() {
     esac
 }
 
-# JS HANDLER
-fmt_js() {
-    command -v prettier >/dev/null 2>&1 || return 1
-    prettier --write --tab-width 4 --print-width 120 "$1" >/dev/null 2>&1
+# AWK HANDLER
+fmt_awk() {
+    command -v gawk >/dev/null 2>&1 || return 1
+    TMP=$(mktemp) || return 1
+    gawk --pretty-print="$TMP" -f "$1" 2>/dev/null && [ -s "$TMP" ] && expand -t 4 "$TMP" >"$1"
+    RET=$?
+    rm -f "$TMP"
+    return $RET
 }
 
 # R HANDLER
@@ -40,13 +44,20 @@ styler::style_file(args[1], transformers = styler::tidyverse_style(indent_by = 4
 ' "$1" >/dev/null 2>&1
 }
 
+# JS HANDLER
+fmt_js() {
+    command -v prettier >/dev/null 2>&1 || return 1
+    prettier --write --tab-width 4 --print-width 120 "$1" >/dev/null 2>&1
+}
+
 # OUTPUT
 [ -n "$2" ] || exit 1
 case "$1" in
     c) fmt_c "$2" ;;
     go) fmt_go "$2" ;;
     sh) fmt_sh "$2" ;;
-    javascript | json | jsonc) fmt_js "$2" ;;
+    awk) fmt_awk "$2" ;;
     r) fmt_r "$2" ;;
+    javascript | json | jsonc) fmt_js "$2" ;;
     *) exit 1 ;;
 esac

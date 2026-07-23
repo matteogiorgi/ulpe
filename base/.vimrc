@@ -326,6 +326,12 @@ function! s:Explorer() abort
     Explore
 endfunction
 " ---
+function! s:IndentBuffer() abort
+    let l:pos = getpos('.')
+    silent! keepjumps normal! gg=G
+    call setpos('.', l:pos)
+endfunction
+" ---
 function! s:CleanBuffer() abort
     let l:pos = getpos('.')
     silent! %s/\s\+$//e
@@ -345,6 +351,14 @@ function! s:ExecScript(arg) abort
     execute 'terminal ++curwin krun.sh ' . a:arg . ' ' . fnameescape(l:target)
 endfunction
 " ---
+function! s:DocScript() abort
+    let l:word = expand('<cword>')
+    if empty(l:word)
+        return
+    endif
+    execute 'terminal ++close kdoc.sh ' . &filetype . ' ' . l:word
+endfunction
+" ---
 function! s:Formatter(arg) abort
     silent! update
     execute 'silent! !kfmt.sh ' . a:arg . ' % >/dev/null 2>&1'
@@ -353,7 +367,9 @@ function! s:Formatter(arg) abort
         echo 'buffer formatted'
         return
     endif
+    silent! call <SID>IndentBuffer()
     silent! call <SID>CleanBuffer()
+    echo 'buffer indented'
 endfunction
 " ---
 function! s:GitDiff() abort
@@ -362,7 +378,12 @@ function! s:GitDiff() abort
         return
     endif
     silent! call <SID>CleanBuffer()
-    execute '!git diff HEAD -- %'
+    call system('git diff --quiet HEAD -- ' . shellescape(expand('%')))
+    if v:shell_error == 0
+        echo 'gitdiff: no changes'
+        return
+    endif
+    execute 'terminal ++curwin git diff HEAD -- %'
 endfunction
 " }}}
 
@@ -505,15 +526,16 @@ augroup language_env
           \     ['c', '.'],
           \     ['go', '.'],
           \     ['sh', '-'],
-          \     ['javascript,json,jsonc', '.'],
+          \     ['awk', '-'],
+          \     ['scheme', '.'],
           \     ['r', '.'],
+          \     ['javascript,json,jsonc', '.'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
               \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>|'
-              \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")|'
-              \ . ' setlocal iskeyword+=' . kw . '|'
-              \ . ' nnoremap <buffer> <silent>K K<CR>'
+              \ . ' nnoremap <buffer> <silent>K :call <SID>DocScript()<CR>|'
+              \ . ' setlocal iskeyword+=' . kw
     endfor
 augroup end
 " }}}
@@ -525,6 +547,7 @@ augroup end
 command! -nargs=0 CTags call <SID>CTags()
 command! -nargs=0 CopyClip call <SID>CopyClip()
 command! -nargs=0 PastaClip call <SID>PastaClip()
+command! -nargs=0 IndentBuffer call <SID>IndentBuffer()
 command! -nargs=0 CleanBuffer call <SID>CleanBuffer()
 command! -nargs=+ ExecScript call <SID>ExecScript(<f-args>)
 command! -nargs=1 Formatter call <SID>Formatter(<f-args>)
@@ -578,6 +601,7 @@ nnoremap <silent><leader>w :ToggleWM<CR>
 nnoremap <silent><leader>e :Explorer<CR>
 nnoremap <silent><leader>r :ResetQF<CR>
 nnoremap <silent><leader>t :CTags<CR>
+nnoremap <silent><leader>y :IndentBuffer<CR>
 nnoremap <silent><leader>o :OSession<CR>
 nnoremap <silent><leader>p :SSession<CR>
 nnoremap <silent><leader>a :AddLineQF<CR>

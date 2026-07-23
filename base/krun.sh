@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # krun.sh — execution dispatcher for Vim's terminal
-# usage: krun.sh {c|go|sh|js|r} file
+# usage: krun.sh {c|go|sh|awk|scheme|r|js} file
 
 # C HANDLER
 run_c() {
@@ -23,10 +23,16 @@ run_sh() {
     esac
 }
 
-# JS HANDLER
-run_js() {
-    command -v node >/dev/null 2>&1 || return 1
-    exec node "$1"
+# AWK HANDLER
+run_awk() {
+    command -v awk >/dev/null 2>&1 || return 1
+    exec awk -f "$1"
+}
+
+# SCHEME HANDLER
+run_scheme() {
+    command -v guile >/dev/null 2>&1 || return 1
+    exec guile --no-auto-compile "$1"
 }
 
 # R HANDLER
@@ -35,13 +41,21 @@ run_r() {
     exec Rscript "$1"
 }
 
+# JS HANDLER
+run_js() {
+    command -v node >/dev/null 2>&1 || return 1
+    exec node "$1"
+}
+
 # OUTPUT
 [ -n "$2" ] || exit 1
 case "$1" in
     c) run_c "$2" ;;
     go) run_go "$2" ;;
     sh) run_sh "$2" ;;
-    javascript | json | jsonc) run_js "$2" ;;
+    awk) run_awk "$2" ;;
+    scheme) run_scheme "$2" ;;
     r) run_r "$2" ;;
+    javascript | json | jsonc) run_js "$2" ;;
     *) exit 1 ;;
 esac
