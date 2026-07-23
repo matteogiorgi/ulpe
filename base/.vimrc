@@ -330,6 +330,7 @@ function! s:IndentBuffer() abort
     let l:pos = getpos('.')
     silent! keepjumps normal! gg=G
     call setpos('.', l:pos)
+    echo 'indentbuffer: "' . expand('%:p') . '" indented'
 endfunction
 " ---
 function! s:CleanBuffer() abort
