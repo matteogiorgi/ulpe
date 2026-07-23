@@ -65,7 +65,7 @@ A `doc_<lang>` function that prints documentation for a symbol, piped through th
 # OCTAVE HANDLER
 doc_octave() {
     command -v octave >/dev/null 2>&1 || return 1
-    octave --quiet --norc --eval "more off; help('$1');" 2>/dev/null | page
+    octave --quiet --norc --eval "more off; help('$1');" 2>/dev/null | page "$1"
 }
 
 # OUTPUT
@@ -105,7 +105,7 @@ Add a `run_<lang>` function and a matching case, mirroring the existing handlers
 # OCTAVE HANDLER
 run_octave() {
     command -v octave >/dev/null 2>&1 || return 1
-    exec octave "$1"
+    exec octave --quiet --norc "$1"
 }
 
 # OUTPUT
@@ -129,8 +129,7 @@ for [ft, kw] in [
     execute 'autocmd FileType ' . ft
           \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
           \ . ' nnoremap <buffer> <silent><localleader>j :call <SID>Formatter(&filetype)<CR>|'
-          \ . ' let &l:keywordprg = "kdoc.sh " . expand("<amatch>")|'
-          \ . ' setlocal iskeyword+=' . kw . '|'
-          \ . ' nnoremap <buffer> <silent>K K<CR>'
+          \ . ' nnoremap <buffer> <silent>K :call <SID>DocScript()<CR>|'
+          \ . ' setlocal iskeyword+=' . kw
 endfor
 ```
