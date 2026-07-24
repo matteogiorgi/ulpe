@@ -201,15 +201,10 @@ endfor
 
 ## Adding a new plugin
 
-ULPE doesn't rely on any plugin manager: *Vim*'s built-in package system is enough. Every plugin is a plain *git* repository living under `~/.vim/pack/plug/start/`, sourced automatically at startup with no extra configuration.
+ULPE doesn't rely on any plugin manager: *Vim*'s built-in package system is enough. Every plugin is a plain *git* repository living under `~/.vim/pack/plug/start/`, sourced automatically at startup with no extra configuration. As an example, this is how you would add [`copilot.vim`](https://github.com/github/copilot.vim):
 
 ```sh
 mkdir -p ~/.vim/pack/plug/start
-git clone --depth 1 https://github.com/<user>/<plugin>.git ~/.vim/pack/plug/start/<plugin>
-```
-
-As an example, this is how you would add [`copilot.vim`](https://github.com/github/copilot.vim):
-```sh
 git clone --depth 1 https://github.com/github/copilot.vim.git ~/.vim/pack/plug/start/copilot.vim
 ```
 
