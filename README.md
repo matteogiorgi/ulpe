@@ -53,7 +53,7 @@ sh -c '
 
 
 
-## Adding a language
+## Adding a new *Vim*-supported language
 
 For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you simply add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Javascript* and *Octave* looks like.
 
@@ -199,7 +199,7 @@ endfor
 
 
 
-## Adding a new plugin
+## Adding a new *Vim*-plugin
 
 ULPE doesn't rely on any plugin manager: *Vim*'s built-in package system is enough. Every plugin is a plain *git* repository living under `~/.vim/pack/plug/start/`, sourced automatically at startup with no extra configuration. As an example, this is how you would add [`copilot.vim`](https://github.com/github/copilot.vim):
 
