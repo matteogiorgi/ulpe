@@ -55,13 +55,56 @@ sh -c '
 
 ## Adding a language
 
-For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you simply add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Octave* looks like.
+For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you simply add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Javascript* and *Octave* looks like.
 
 
 ### `kdoc.sh`
 
 A `doc_<lang>` function that prints documentation for a symbol, piped through the `page` helper when the output can be long:
 ```sh
+# JS HANDLER
+doc_js() {
+    command -v node >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
+    node -e '
+const util = require("util");
+const id = process.argv[1];
+let obj;
+let mod = false;
+try { obj = (0, eval)(id); } catch (e) {
+    try { obj = require(id); mod = true; } catch (e2) { process.exit(1); }
+}
+const hide = ["length", "name", "prototype", "caller", "arguments", "constructor"];
+const names = (o) => (o ? Object.getOwnPropertyNames(o).sort() : []);
+const list = (label, arr) => {
+    if (arr.length) console.log(label + ":\n  " + arr.filter((n) => !hide.includes(n)).join(", "));
+};
+console.log("=== " + id + " ===");
+console.log("type: " + typeof obj + (mod ? " (module)" : ""));
+if (typeof obj === "function") {
+    const src = obj.toString();
+    console.log("arity: " + obj.length);
+    list("static", names(obj));
+    list("prototype", names(obj.prototype));
+    if (!src.includes("[native code]")) console.log("\nsource:\n" + src);
+} else if (obj !== null && typeof obj === "object") {
+    console.log("class: " + (obj.constructor ? obj.constructor.name : "-"));
+    list("properties", names(obj));
+    let proto = Object.getPrototypeOf(obj);
+    let inh = [];
+    while (proto && proto !== Object.prototype) {
+        inh = inh.concat(names(proto));
+        proto = Object.getPrototypeOf(proto);
+    }
+    list("inherited", [...new Set(inh)].sort());
+} else {
+    console.log("value: " + util.inspect(obj));
+}
+' "$1" 2>/dev/null | page "$1"
+}
+
 # OCTAVE HANDLER
 doc_octave() {
     command -v octave >/dev/null 2>&1 || {
@@ -75,6 +118,7 @@ doc_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
+    javascript | json | jsonc) doc_js "$2" ;;
     matlab | octave) doc_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -85,6 +129,12 @@ esac
 
 Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing. *Octave* has no standard formatter, so this uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
 ```sh
+# JS HANDLER
+fmt_js() {
+    command -v prettier >/dev/null 2>&1 || return 1
+    prettier --write --tab-width 4 --print-width 120 "$1" >/dev/null 2>&1
+}
+
 # OCTAVE HANDLER
 fmt_octave() {
     command -v octfmt >/dev/null 2>&1 || return 1
@@ -95,6 +145,7 @@ fmt_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
+    javascript | json | jsonc) fmt_js "$2" ;;
     matlab | octave) fmt_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -105,6 +156,12 @@ esac
 
 Add a `run_<lang>` function and a matching case, mirroring the existing handlers (`exec` so the terminal buffer is replaced by the child process):
 ```sh
+# JS HANDLER
+run_js() {
+    command -v node >/dev/null 2>&1 || return 1
+    exec node "$1"
+}
+
 # OCTAVE HANDLER
 run_octave() {
     command -v octave >/dev/null 2>&1 || return 1
@@ -115,6 +172,7 @@ run_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
+    javascript | json | jsonc) run_js "$2" ;;
     matlab | octave) run_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -127,6 +185,7 @@ Finally, plug the *Vim* filetype into the `language_env` augroup so `<localleade
 ```vim
 for [ft, kw] in [
       ...
+      \     ['javascript,json,jsonc', '.'],
       \     ['matlab,octave', '.'],
       \ ]
     execute 'autocmd FileType ' . ft
@@ -136,3 +195,51 @@ for [ft, kw] in [
           \ . ' setlocal iskeyword+=' . kw
 endfor
 ```
+
+
+
+
+## Adding a new plugin
+
+ULPE doesn't rely on any plugin manager: *Vim*'s built-in package system is enough. Every plugin is a plain *git* repository living under `~/.vim/pack/plug/start/`, sourced automatically at startup with no extra configuration.
+
+```sh
+mkdir -p ~/.vim/pack/plug/start
+git clone --depth 1 https://github.com/<user>/<plugin>.git ~/.vim/pack/plug/start/<plugin>
+```
+
+As an example, this is how you would add [`copilot.vim`](https://github.com/github/copilot.vim):
+```sh
+git clone --depth 1 https://github.com/github/copilot.vim.git ~/.vim/pack/plug/start/copilot.vim
+```
+
+Once cloned, launch *Vim* and run `:helptags ALL` to index the plugin documentation, so that `:help copilot` works as expected.
+
+> Everything under `start/` is loaded at startup. If you want a plugin loaded on demand instead, clone it into `~/.vim/pack/plug/opt/` and pull it in with `:packadd <plugin>` (or lazily from your configuration).
+
+Whatever tuning the plugin needs goes into `~/.vim/plug/plugin.vim`, next to the configuration of the other plugins, wrapped in a fold marker and guarded by a `&rtp` check so the block stays harmless when the plugin isn't installed:
+```vim
+" Copilot {{{
+if &rtp =~ 'copilot'
+    imap <silent><C-s> <Plug>(copilot-suggest)
+    imap <silent><C-f> <Plug>(copilot-accept-word)
+    imap <silent><C-j> <Plug>(copilot-next)
+    imap <silent><C-k> <Plug>(copilot-previous)
+    imap <silent><C-l> <Plug>(copilot-accept-line)
+endif
+"}}}
+```
+
+Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug) from the root of the repository, or with:
+```sh
+for DIR in "$HOME"/.vim/pack/plug/start/*/; do
+    git -C "$DIR" pull --ff-only
+done
+```
+
+Removing a plugin is equally trivial, delete its directory and drop the related block from `~/.vim/plug/plugin.vim`:
+```sh
+rm -rf ~/.vim/pack/plug/start/<plugin>
+```
+
+> To keep the environment reproducible, add the `git clone` line to [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug) and the configuration block to the *vimscript* the installer copies over, so a fresh machine gets the same setup with a single run.

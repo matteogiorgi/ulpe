@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # kdoc.sh — documentation dispatcher for Vim's K
-# usage: kdoc.sh {c|go|sh|awk|scheme|r|javascript|json|jsonc} symbol
+# usage: kdoc.sh {c|go|sh|awk|scheme|r} symbol
 
 # NO DOC
 nodoc() {
@@ -91,49 +91,6 @@ if (length(h)) {
 ' "$1" 2>/dev/null | page "$1"
 }
 
-# JS HANDLER
-doc_js() {
-    command -v node >/dev/null 2>&1 || {
-        nodoc "$1"
-        return 1
-    }
-    node -e '
-const util = require("util");
-const id = process.argv[1];
-let obj;
-let mod = false;
-try { obj = (0, eval)(id); } catch (e) {
-    try { obj = require(id); mod = true; } catch (e2) { process.exit(1); }
-}
-const hide = ["length", "name", "prototype", "caller", "arguments", "constructor"];
-const names = (o) => (o ? Object.getOwnPropertyNames(o).sort() : []);
-const list = (label, arr) => {
-    if (arr.length) console.log(label + ":\n  " + arr.filter((n) => !hide.includes(n)).join(", "));
-};
-console.log("=== " + id + " ===");
-console.log("type: " + typeof obj + (mod ? " (module)" : ""));
-if (typeof obj === "function") {
-    const src = obj.toString();
-    console.log("arity: " + obj.length);
-    list("static", names(obj));
-    list("prototype", names(obj.prototype));
-    if (!src.includes("[native code]")) console.log("\nsource:\n" + src);
-} else if (obj !== null && typeof obj === "object") {
-    console.log("class: " + (obj.constructor ? obj.constructor.name : "-"));
-    list("properties", names(obj));
-    let proto = Object.getPrototypeOf(obj);
-    let inh = [];
-    while (proto && proto !== Object.prototype) {
-        inh = inh.concat(names(proto));
-        proto = Object.getPrototypeOf(proto);
-    }
-    list("inherited", [...new Set(inh)].sort());
-} else {
-    console.log("value: " + util.inspect(obj));
-}
-' "$1" 2>/dev/null | page "$1"
-}
-
 # OUTPUT
 [ -n "$2" ] || exit 1
 case "$1" in
@@ -143,6 +100,5 @@ case "$1" in
     awk) doc_awk "$2" ;;
     scheme) doc_scheme "$2" ;;
     r) doc_r "$2" ;;
-    javascript | json | jsonc) doc_js "$2" ;;
     *) exit 1 ;;
 esac

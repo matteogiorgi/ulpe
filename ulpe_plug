@@ -100,7 +100,6 @@ set -- \
     "https://github.com/ctrlpvim/ctrlp.vim.git" \
     "https://github.com/machakann/vim-sandwich.git" \
     "https://github.com/tpope/vim-commentary.git" \
-    "https://github.com/tpope/vim-fugitive.git" \
     "https://github.com/github/copilot.vim.git" \
     "https://github.com/cohama/lexima.vim.git" \
     "https://github.com/wellle/context.vim.git" \

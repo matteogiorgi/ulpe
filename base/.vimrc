@@ -530,7 +530,6 @@ augroup language_env
           \     ['awk', '-'],
           \     ['scheme', '.'],
           \     ['r', '.'],
-          \     ['javascript,json,jsonc', '.'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
