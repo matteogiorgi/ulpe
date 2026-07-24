@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # kdoc.sh — documentation dispatcher for Vim's K
-# usage: kdoc.sh {c|go|sh|awk|scheme|r|js} symbol
+# usage: kdoc.sh {c|go|sh|awk|scheme|r|javascript|json|jsonc} symbol
 
 # NO DOC
 nodoc() {
@@ -20,17 +20,28 @@ page() {
 
 # C HANDLER
 doc_c() {
+    command -v man >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     man 3 "$1" 2>/dev/null || man 2 "$1" 2>/dev/null || nodoc "$1"
 }
 
 # GO HANDLER
 doc_go() {
-    command -v go >/dev/null 2>&1 || return 1
+    command -v go >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     go doc "$1" 2>/dev/null | page "$1"
 }
 
 # SH HANDLER
 doc_sh() {
+    command -v man >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     man "$1" 2>/dev/null || nodoc "$1"
 }
 
@@ -47,20 +58,29 @@ doc_awk() {
             return 1
             ;;
     esac
-    command -v info >/dev/null 2>&1 && info --vi-keys gawk --index-search="$1" 2>/dev/null && return 0
-    man 1p awk 2>/dev/null || man awk 2>/dev/null || nodoc "$1"
+    command -v info >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
+    info --vi-keys gawk --index-search="$1" 2>/dev/null || nodoc "$1"
 }
 
 # SCHEME HANDLER
 doc_scheme() {
-    command -v guile >/dev/null 2>&1 || return 1
+    command -v guile >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     guile -q -c "(use-modules (ice-9 session)) (help $1)" 2>/dev/null |
         grep -v '^Did not find' | page "$1"
 }
 
 # R HANDLER
 doc_r() {
-    command -v Rscript >/dev/null 2>&1 || return 1
+    command -v Rscript >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     Rscript --vanilla -e '
 args <- commandArgs(TRUE)
 h <- help(args[1])
@@ -73,7 +93,10 @@ if (length(h)) {
 
 # JS HANDLER
 doc_js() {
-    command -v node >/dev/null 2>&1 || return 1
+    command -v node >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     node -e '
 const util = require("util");
 const id = process.argv[1];

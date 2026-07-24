@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # kfmt.sh — formatter dispatcher for Vim
-# usage: kfmt.sh {c|go|sh|awk|r|js} file
-# exit: 0 if formatted, 1 otherwise
+# usage: kfmt.sh {c|go|sh|awk|r|javascript|json|jsonc} file
+# exit: 0 if formatted, 1 otherwise (Vim's Formatter falls back to gg=G)
 
 # C HANDLER
 fmt_c() {
@@ -29,9 +29,10 @@ fmt_sh() {
 fmt_awk() {
     command -v gawk >/dev/null 2>&1 || return 1
     TMP=$(mktemp) || return 1
-    gawk --pretty-print="$TMP" -f "$1" 2>/dev/null && [ -s "$TMP" ] && expand -t 4 "$TMP" >"$1"
+    gawk --pretty-print="$TMP" -f "$1" 2>/dev/null && [ -s "$TMP" ] &&
+        expand -t 4 "$TMP" >"$TMP.e" && cat "$TMP.e" >"$1"
     RET=$?
-    rm -f "$TMP"
+    rm -f "$TMP" "$TMP.e"
     return $RET
 }
 

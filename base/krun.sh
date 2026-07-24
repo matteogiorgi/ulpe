@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # krun.sh — execution dispatcher for Vim's terminal
-# usage: krun.sh {c|go|sh|awk|scheme|r|js} file
+# usage: krun.sh {c|go|sh|awk|scheme|r|javascript|json|jsonc} file
 
 # C HANDLER
 run_c() {

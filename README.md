@@ -64,7 +64,10 @@ A `doc_<lang>` function that prints documentation for a symbol, piped through th
 ```sh
 # OCTAVE HANDLER
 doc_octave() {
-    command -v octave >/dev/null 2>&1 || return 1
+    command -v octave >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
     octave --quiet --norc --eval "more off; help('$1');" 2>/dev/null | page "$1"
 }
 
