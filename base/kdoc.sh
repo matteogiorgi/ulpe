@@ -72,7 +72,7 @@ doc_scheme() {
         return 1
     }
     guile -q -c "(use-modules (ice-9 session)) (help $1)" 2>/dev/null |
-        grep -v '^Did not find' | page "$1"
+        grep -vE '^(Did not find|No documentation found|\(guile\):)' | page "$1"
 }
 
 # R HANDLER
