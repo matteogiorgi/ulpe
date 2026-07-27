@@ -38,7 +38,7 @@ run_scheme() {
 # R HANDLER
 run_r() {
     command -v Rscript >/dev/null 2>&1 || return 1
-    exec Rscript "$1"
+    exec Rscript -e 'source(commandArgs(TRUE)[1])' "$1"
 }
 
 # OUTPUT
