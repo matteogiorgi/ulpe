@@ -100,11 +100,20 @@ EOF
 ### Packages
 ############
 
-PACKAGES="git wget curl ssh parted 7zip util-linux dash bash bash-completion shfmt fzy less file lazygit \
-btop tree fd-find trash-cli xclip wl-clipboard man-db glibc-doc manpages-dev manpages-posix manpages-posix-dev \
-procps x11-xkb-utils tmux vim universal-ctags wamerican groff gawk gawk-doc info build-essential make-doc \
-m4 m4-doc tcc pcc gdb nasm yasm binutils linux-perf strace ltrace pkg-config valgrind indent gcc-doc golang \
-guile-3.0 guile-3.0-doc r-base r-base-dev"
+PACKAGES="\
+util-linux parted procps \
+git wget curl ssh 7zip fzy less file lazygit btop tree fd-find trash-cli \
+x11-xkb-utils xclip wl-clipboard \
+glibc-doc man-db manpages-dev manpages-posix manpages-posix-dev \
+tmux vim universal-ctags wamerican groff \
+dash bash bash-completion shfmt \
+gawk gawk-doc info \
+m4 m4-doc \
+build-essential binutils binutils-doc pkgconf \
+tcc pcc gdb nasm yasm linux-perf strace ltrace valgrind indent gcc-doc make-doc \
+golang \
+guile-3.0 guile-3.0-doc \
+r-base r-base-dev"
 # ---
 for PKG in $PACKAGES; do
     if ! apt-get -s install "$PKG" >/dev/null 2>&1; then
