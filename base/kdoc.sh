@@ -12,7 +12,7 @@ nodoc() {
 page() {
     OUT=$(cat)
     if [ -n "$OUT" ]; then
-        printf '%s\n' "$OUT" | less
+        printf '%s\n' "$OUT" | less -R
         return 0
     fi
     nodoc "$1"

@@ -55,53 +55,25 @@ sh -c '
 
 ## Adding a new *Vim*-supported language
 
-For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you simply add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Javascript* and *Octave* looks like.
+For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired together in [`.vimrc`](https://github.com/matteogiorgi/ulpe/blob/main/base/.vimrc) through three dispatcher scripts: [`kdoc.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kdoc.sh), [`kfmt.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/kfmt.sh) and [`krun.sh`](https://github.com/matteogiorgi/ulpe/blob/main/base/krun.sh). To support any new language you simply add one handler to each script and one entry to `.vimrc`. As an example, here is what adding *Julia* and *Octave* looks like.
 
 
 ### `kdoc.sh`
 
 A `doc_<lang>` function that prints documentation for a symbol, piped through the `page` helper when the output can be long:
 ```sh
-# JS HANDLER
-doc_js() {
-    command -v node >/dev/null 2>&1 || {
+# JULIA HANDLER
+doc_julia() {
+    command -v julia >/dev/null 2>&1 || {
         nodoc "$1"
         return 1
     }
-    node -e '
-const util = require("util");
-const id = process.argv[1];
-let obj;
-let mod = false;
-try { obj = (0, eval)(id); } catch (e) {
-    try { obj = require(id); mod = true; } catch (e2) { process.exit(1); }
-}
-const hide = ["length", "name", "prototype", "caller", "arguments", "constructor"];
-const names = (o) => (o ? Object.getOwnPropertyNames(o).sort() : []);
-const list = (label, arr) => {
-    if (arr.length) console.log(label + ":\n  " + arr.filter((n) => !hide.includes(n)).join(", "));
-};
-console.log("=== " + id + " ===");
-console.log("type: " + typeof obj + (mod ? " (module)" : ""));
-if (typeof obj === "function") {
-    const src = obj.toString();
-    console.log("arity: " + obj.length);
-    list("static", names(obj));
-    list("prototype", names(obj.prototype));
-    if (!src.includes("[native code]")) console.log("\nsource:\n" + src);
-} else if (obj !== null && typeof obj === "object") {
-    console.log("class: " + (obj.constructor ? obj.constructor.name : "-"));
-    list("properties", names(obj));
-    let proto = Object.getPrototypeOf(obj);
-    let inh = [];
-    while (proto && proto !== Object.prototype) {
-        inh = inh.concat(names(proto));
-        proto = Object.getPrototypeOf(proto);
-    }
-    list("inherited", [...new Set(inh)].sort());
-} else {
-    console.log("value: " + util.inspect(obj));
-}
+    julia --startup-file=no -e '
+using REPL, Markdown
+b = Docs.Binding(Main, Symbol(ARGS[1]))
+d = Docs.doc(b)
+occursin("No documentation found", Markdown.plain(d)) ||
+    show(IOContext(stdout, :color => true), MIME("text/plain"), d)
 ' "$1" 2>/dev/null | page "$1"
 }
 
@@ -118,7 +90,7 @@ doc_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
-    javascript | json | jsonc) doc_js "$2" ;;
+    julia) doc_julia "$2" ;;
     matlab | octave) doc_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -127,12 +99,16 @@ esac
 
 ### `kfmt.sh`
 
-Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing. *Octave* has no standard formatter, so this uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
+Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing.
+For *Julia* you can use [`JuliaFormatter`](https://juliapackages.com/p/juliaformatter), *Octave* instead has no standard formatter, so this example uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
 ```sh
-# JS HANDLER
-fmt_js() {
-    command -v prettier >/dev/null 2>&1 || return 1
-    prettier --write --tab-width 4 --print-width 120 "$1" >/dev/null 2>&1
+# JULIA HANDLER
+fmt_julia() {
+    command -v julia >/dev/null 2>&1 || return 1
+    julia --startup-file=no -e '
+using JuliaFormatter
+format_file(ARGS[1]; indent = 4, margin = 120)
+' "$1" >/dev/null 2>&1
 }
 
 # OCTAVE HANDLER
@@ -145,7 +121,7 @@ fmt_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
-    javascript | json | jsonc) fmt_js "$2" ;;
+    julia) fmt_julia "$2" ;;
     matlab | octave) fmt_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -156,10 +132,10 @@ esac
 
 Add a `run_<lang>` function and a matching case, mirroring the existing handlers (`exec` so the terminal buffer is replaced by the child process):
 ```sh
-# JS HANDLER
-run_js() {
-    command -v node >/dev/null 2>&1 || return 1
-    exec node "$1"
+# JULIA HANDLER
+run_julia() {
+    command -v julia >/dev/null 2>&1 || return 1
+    exec julia "$1"
 }
 
 # OCTAVE HANDLER
@@ -172,7 +148,7 @@ run_octave() {
 [ -n "$2" ] || exit 1
 case "$1" in
     ...
-    javascript | json | jsonc) run_js "$2" ;;
+    julia) run_julia "$2" ;;
     matlab | octave) run_octave "$2" ;;
     *) exit 1 ;;
 esac
@@ -185,7 +161,7 @@ Finally, plug the *Vim* filetype into the `language_env` augroup so `<localleade
 ```vim
 for [ft, kw] in [
       ...
-      \     ['javascript,json,jsonc', '.'],
+      \     ['julia', '.'],
       \     ['matlab,octave', '.'],
       \ ]
     execute 'autocmd FileType ' . ft
