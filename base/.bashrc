@@ -194,7 +194,7 @@ flog() {
     command -v fzy &>/dev/null || return
     local FLOG
     if FLOG="$(HISTTIMEFORMAT='' history | sed 's/^ *[0-9]\+ *//' | `
-          `tac | awk '!seen[$0]++' | \fzy -p "history > ")"; then
+          `tac | awk '!seen[$0]++' | \fzy -p "shell history > ")"; then
         READLINE_LINE="$FLOG"
         READLINE_POINT=${#READLINE_LINE}
     fi
