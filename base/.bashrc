@@ -189,6 +189,16 @@ fkill() {
         fi
     fi
 }
+# ---
+flog() {
+    command -v fzy &>/dev/null || return
+    local FLOG
+    if FLOG="$(HISTTIMEFORMAT='' history | sed 's/^ *[0-9]\+ *//' | `
+          `tac | awk '!seen[$0]++' | \fzy -p "history > ")"; then
+        READLINE_LINE="$FLOG"
+        READLINE_POINT=${#READLINE_LINE}
+    fi
+}
 
 
 
@@ -299,6 +309,7 @@ bind -m vi-command -x '"\C-k": fhook'
 bind -m vi-command -x '"\C-f": ffind'
 bind -m vi-command -x '"\C-g": fgit'
 bind -m vi-command -x '"\C-x": fkill'
+bind -m vi-command -x '"\C-o": flog'
 bind -m vi-insert -x '"\C-l": clear -x && echo ${PS1@P}'
 bind -m vi-insert -x '"\C-e": fexplore && echo ${PS1@P}'
 bind -m vi-insert -x '"\C-b": fbase && echo ${PS1@P}'
@@ -307,6 +318,7 @@ bind -m vi-insert -x '"\C-k": fhook'
 bind -m vi-insert -x '"\C-f": ffind'
 bind -m vi-insert -x '"\C-g": fgit'
 bind -m vi-insert -x '"\C-x": fkill'
+bind -m vi-insert -x '"\C-o": flog'
 
 
 
