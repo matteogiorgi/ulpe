@@ -46,8 +46,9 @@ run_roff() {
     command -v groff >/dev/null 2>&1 || exec less "$1"
     if grep -qE '^\.(TL|AU|NH|SH|PP|LP|IP|QP|DS|EQ|TS|nf)\b' "$1"; then
         cols=$(tput cols 2>/dev/null || echo 80)
-        # groff -e -t -ms -Tpdf "$1" >"${1%.*}.pdf"
         groff -e -t -ms -Tutf8 -rLL="${cols}n" -rPO=0 "$1" 2>/dev/null | less -R
+        # to generate a PDF, use the -Tpdf flag and redirect output to a file:
+        # groff -e -t -ms -Tpdf "$1" >"${1%.*}.pdf"
     else
         exec less "$1"
     fi
