@@ -57,7 +57,7 @@ endif
 
 " Context {{{
 if &rtp =~ 'context'
-    let g:context_filetype_blacklist = ['startscreen']
+    let g:context_filetype_blacklist = []
     let g:context_highlight_tag = '<hide>'
 endif
 "}}}
