@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # krun.sh — execution dispatcher for Vim's terminal
-# usage: krun.sh {c|go|sh|awk|scheme|r} file
+# usage: krun.sh {c|go|sh|awk|scheme|r|nroff} file
 
 # C HANDLER
 run_c() {
@@ -41,6 +41,18 @@ run_r() {
     exec Rscript -e 'source(commandArgs(TRUE)[1])' "$1"
 }
 
+# ROFF HANDLER
+run_roff() {
+    command -v groff >/dev/null 2>&1 || exec less "$1"
+    if grep -qE '^\.(TL|AU|NH|SH|PP|LP|IP|QP|DS|EQ|TS|nf)\b' "$1"; then
+        cols=$(tput cols 2>/dev/null || echo 80)
+        # groff -e -t -ms -Tpdf "$1" >"${1%.*}.pdf"
+        groff -e -t -ms -Tutf8 -rLL="${cols}n" -rPO=0 "$1" 2>/dev/null | less -R
+    else
+        exec less "$1"
+    fi
+}
+
 # OUTPUT
 [ -n "$2" ] || exit 1
 case "$1" in
@@ -50,5 +62,6 @@ case "$1" in
     awk) run_awk "$2" ;;
     scheme) run_scheme "$2" ;;
     r) run_r "$2" ;;
+    nroff | text) run_roff "$2" ;;
     *) exit 1 ;;
 esac

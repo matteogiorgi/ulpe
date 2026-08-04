@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # kdoc.sh — documentation dispatcher for Vim's K
-# usage: kdoc.sh {c|go|sh|awk|scheme|r} symbol
+# usage: kdoc.sh {c|go|sh|awk|scheme|r|nroff} symbol
 
 # NO DOC
 nodoc() {
@@ -91,6 +91,15 @@ if (length(h)) {
 ' "$1" 2>/dev/null | page "$1"
 }
 
+# ROFF HANDLER
+doc_roff() {
+    command -v dict >/dev/null 2>&1 || {
+        nodoc "$1"
+        return 1
+    }
+    dict "$1" 2>/dev/null | page "$1"
+}
+
 # OUTPUT
 [ -n "$2" ] || exit 1
 case "$1" in
@@ -100,5 +109,6 @@ case "$1" in
     awk) doc_awk "$2" ;;
     scheme) doc_scheme "$2" ;;
     r) doc_r "$2" ;;
+    nroff | text) doc_roff "$2" ;;
     *) exit 1 ;;
 esac

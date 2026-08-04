@@ -105,7 +105,8 @@ util-linux parted procps \
 git wget curl ssh 7zip fzy less file lazygit btop fd-find trash-cli \
 x11-xkb-utils xclip wl-clipboard \
 glibc-doc man-db manpages-dev manpages-posix manpages-posix-dev \
-tmux vim universal-ctags wamerican groff \
+tmux vim universal-ctags wamerican \
+groff dict dictd dict-gcide dict-wn\
 dash bash bash-completion shfmt \
 gawk gawk-doc info \
 m4 m4-doc \
