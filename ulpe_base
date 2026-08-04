@@ -52,7 +52,10 @@ store_conf() {
         .bash_logout \
         .vimrc \
         .tmux.conf \
-        .local/bin/fetch.sh
+        .local/bin/fetch.sh \
+        .local/bin/kdoc.sh \
+        .local/bin/kfmt.sh \
+        .local/bin/krun.sh
     do
         backup_conf "$HOME/$SCRIPT" "$RESTORE"
     done

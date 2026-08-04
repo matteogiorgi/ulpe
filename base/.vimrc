@@ -481,7 +481,7 @@ augroup end
 augroup writer_filetype
     autocmd!
     autocmd FileType plaintex setfiletype=tex
-    autocmd FileType tex,markdown,html,text,nroff,scratch
+    autocmd FileType nroff,tex,markdown,html,text,scratch
           \ setlocal formatoptions=|
           \ setlocal spell conceallevel=0|
           \ setlocal spelllang=en_us|
@@ -524,13 +524,13 @@ augroup language_env
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     for [ft, kw] in [
+          \     ['nroff,text', '-'],
           \     ['c', '.'],
           \     ['go', '.'],
           \     ['sh', '-'],
           \     ['awk', '-'],
           \     ['scheme', '.'],
           \     ['r', '.'],
-          \     ['nroff,text', '-'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
