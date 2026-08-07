@@ -115,7 +115,7 @@ gawk gawk-doc info \
 m4 m4-doc \
 build-essential binutils binutils-doc pkgconf libgc-dev libffi-dev libgmp-dev libreadline-dev \
 tcc pcc gdb nasm yasm linux-perf strace ltrace valgrind indent gcc-doc make-doc \
-golang \
+golang gopls \
 guile-3.0 guile-3.0-dev guile-3.0-doc \
 r-base r-base-dev"
 # ---
