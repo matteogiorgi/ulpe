@@ -198,18 +198,23 @@ function! s:ToggleFC() abort
 endfunction
 " ---
 function! s:ToggleWM() abort
+    let l:pairs = [
+          \     ['j',      '(v:count == 0 ? "gj" : "j")'],
+          \     ['k',      '(v:count == 0 ? "gk" : "k")'],
+          \     ['<Down>', '(v:count == 0 ? "gj" : "j")'],
+          \     ['<Up>',   '(v:count == 0 ? "gk" : "k")'],
+          \     ['0',      '"g0"'],
+          \     ['$',      '"g$"'],
+          \     ['<Home>', '"g0"'],
+          \     ['<End>',  '"g$"'],
+          \ ]
     if get(b:, 'wrapmotion', 0)
         unlet b:wrapmotion
         setlocal nowrap
         for m in ['n', 'x', 'o']
-            execute m . 'unmap <buffer> j'
-            execute m . 'unmap <buffer> k'
-            execute m . 'unmap <buffer> <Down>'
-            execute m . 'unmap <buffer> <Up>'
-            execute m . 'unmap <buffer> 0'
-            execute m . 'unmap <buffer> $'
-            execute m . 'unmap <buffer> <Home>'
-            execute m . 'unmap <buffer> <End>'
+            for [l:lhs, l:rhs] in l:pairs
+                execute m . 'unmap <buffer> ' . l:lhs
+            endfor
         endfor
         echo 'wrapmotion: off'
         return
@@ -217,16 +222,9 @@ function! s:ToggleWM() abort
     let b:wrapmotion = 1
     setlocal wrap
     for m in ['n', 'x', 'o']
-        execute m . 'noremap <buffer> <expr> j (v:count == 0 ? "gj" : "j")'
-        execute m . 'noremap <buffer> <expr> k (v:count == 0 ? "gk" : "k")'
-        execute m . 'noremap <buffer> <expr> <Down> (v:count == 0 ? "gj" : "j")'
-        execute m . 'noremap <buffer> <expr> <Up> (v:count == 0 ? "gk" : "k")'
-    endfor
-    for m in ['n', 'x', 'o']
-        execute m . 'noremap <buffer> 0 g0'
-        execute m . 'noremap <buffer> $ g$'
-        execute m . 'noremap <buffer> <Home> g0'
-        execute m . 'noremap <buffer> <End> g$'
+        for [l:lhs, l:rhs] in l:pairs
+            execute m . 'noremap <buffer> <expr> ' . l:lhs . ' ' . l:rhs
+        endfor
     endfor
     echo 'wrapmotion: on'
 endfunction
