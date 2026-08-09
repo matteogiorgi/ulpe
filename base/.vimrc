@@ -204,8 +204,12 @@ function! s:ToggleWM() abort
         for m in ['n', 'x', 'o']
             execute m . 'unmap <buffer> j'
             execute m . 'unmap <buffer> k'
+            execute m . 'unmap <buffer> <Down>'
+            execute m . 'unmap <buffer> <Up>'
             execute m . 'unmap <buffer> 0'
             execute m . 'unmap <buffer> $'
+            execute m . 'unmap <buffer> <Home>'
+            execute m . 'unmap <buffer> <End>'
         endfor
         echo 'wrapmotion: off'
         return
@@ -215,10 +219,14 @@ function! s:ToggleWM() abort
     for m in ['n', 'x', 'o']
         execute m . 'noremap <buffer> <expr> j (v:count == 0 ? "gj" : "j")'
         execute m . 'noremap <buffer> <expr> k (v:count == 0 ? "gk" : "k")'
+        execute m . 'noremap <buffer> <expr> <Down> (v:count == 0 ? "gj" : "j")'
+        execute m . 'noremap <buffer> <expr> <Up> (v:count == 0 ? "gk" : "k")'
     endfor
     for m in ['n', 'x', 'o']
         execute m . 'noremap <buffer> 0 g0'
         execute m . 'noremap <buffer> $ g$'
+        execute m . 'noremap <buffer> <Home> g0'
+        execute m . 'noremap <buffer> <End> g$'
     endfor
     echo 'wrapmotion: on'
 endfunction
