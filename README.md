@@ -190,7 +190,6 @@ Once cloned, launch *Vim* and run `:helptags ALL` to index the plugin documentat
 
 Whatever tuning the plugin needs goes into `~/.vim/plug/plugin.vim`, next to the configuration of the other plugins, wrapped in a fold marker and guarded by a `&rtp` check so the block stays harmless when the plugin isn't installed:
 ```vim
-" Copilot {{{
 if &rtp =~ 'copilot'
     imap <silent><C-s> <Plug>(copilot-suggest)
     imap <silent><C-f> <Plug>(copilot-accept-word)
@@ -198,7 +197,6 @@ if &rtp =~ 'copilot'
     imap <silent><C-k> <Plug>(copilot-previous)
     imap <silent><C-l> <Plug>(copilot-accept-line)
 endif
-"}}}
 ```
 
 Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug) from the root of the repository, or with:
