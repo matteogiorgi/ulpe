@@ -23,6 +23,7 @@ esac
 
 if [[ -f ~/.profile ]] && [[ -z "$_PROFILE_LOADED" ]]; then
     . ~/.profile
+    return
 fi
 
 

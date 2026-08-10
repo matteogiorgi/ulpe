@@ -13,7 +13,6 @@
 if [ -n "$_PROFILE_LOADED" ]; then
     return 0
 fi
-# ---
 export _PROFILE_LOADED=1
 
 
@@ -38,4 +37,15 @@ export VISUAL='/usr/bin/vi'
 if [ "${XDG_SESSION_TYPE:-}" = 'x11' ] && [ -n "${DISPLAY:-}" ]; then
     export TERM='xterm-256color'
     setxkbmap -option 'caps:escape' >/dev/null 2>&1
+fi
+
+
+
+
+### Source .bashrc
+##################
+
+if ! [ -n "$_BASHRC_LOADED" ] && [ -n "$BASH_VERSION" ]; then
+    export _BASHRC_LOADED=1
+    [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
 fi
