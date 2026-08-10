@@ -18,6 +18,16 @@ esac
 
 
 
+### Source .profile (if not already loaded)
+###########################################
+
+if [[ -f ~/.profile ]] && [[ -z "$_PROFILE_LOADED" ]]; then
+    . ~/.profile
+fi
+
+
+
+
 ### History & Options
 #####################
 
@@ -326,9 +336,4 @@ bind -m vi-insert -x '"\C-o": flog'
 ### System-Fetcher
 ##################
 
-if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    mkdir -p "$HOME/.local/bin"
-    export PATH="$PATH:$HOME/.local/bin"
-fi
-# ---
 fetch.sh 2>/dev/null

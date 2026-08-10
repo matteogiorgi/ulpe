@@ -7,6 +7,18 @@
 
 
 
+### Prevent multiple-sourcing
+#############################
+
+if [ -n "$_PROFILE_LOADED" ]; then
+    return 0
+fi
+# ---
+export _PROFILE_LOADED=1
+
+
+
+
 ### Environment
 ###############
 
@@ -26,14 +38,4 @@ export VISUAL='/usr/bin/vi'
 if [ "${XDG_SESSION_TYPE:-}" = 'x11' ] && [ -n "${DISPLAY:-}" ]; then
     export TERM='xterm-256color'
     setxkbmap -option 'caps:escape' >/dev/null 2>&1
-fi
-
-
-
-
-### Bourne-Again-Shell
-######################
-
-if [ -n "$BASH_VERSION" ]; then
-    [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
 fi
