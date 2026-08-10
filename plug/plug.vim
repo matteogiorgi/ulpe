@@ -111,7 +111,7 @@ if &rtp =~ 'lightline'
     " ---
     augroup lightline_gitbranch
         autocmd!
-        autocmd FocusGained,BufEnter * unlet! b:gitbranch_dir
+        autocmd FocusGained,BufEnter,BufWritePost,ShellCmdPost * unlet! b:gitbranch_dir
     augroup end
 endif
 "}}}
