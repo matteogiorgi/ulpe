@@ -21,12 +21,22 @@ export _PROFILE_LOADED=1
 ### Environment
 ###############
 
-mkdir -p "$HOME/.local/bin"
-export PATH="$PATH:$HOME/.local/bin"
 export SHELL='/usr/bin/bash'
 export PAGER='/usr/bin/less'
 export EDITOR='/usr/bin/vi'
 export VISUAL='/usr/bin/vi'
+export GOPATH="$HOME/go"
+# ---
+mkdir -p "$HOME/.local/bin"
+for _BIN_DIRECTORY in "$HOME/.local/bin" "$GOPATH/bin"; do
+	case ":$PATH:" in
+		*":$_BIN_DIRECTORY:"*) ;;
+		*) PATH="$PATH:$_BIN_DIRECTORY" ;;
+	esac
+done
+# ---
+unset _BIN_DIRECTORY
+export PATH
 
 
 
@@ -45,7 +55,7 @@ fi
 ### Source .bashrc
 ##################
 
-if ! [ -n "$_BASHRC_LOADED" ] && [ -n "$BASH_VERSION" ]; then
+if [ -n "$BASH_VERSION" ] && [ -z "$_BASHRC_LOADED" ]; then
     export _BASHRC_LOADED=1
     [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
 fi
