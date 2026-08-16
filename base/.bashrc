@@ -320,7 +320,7 @@ bind -m vi-command -x '"\C-k": fhook'
 bind -m vi-command -x '"\C-f": ffind'
 bind -m vi-command -x '"\C-g": fgit'
 bind -m vi-command -x '"\C-x": fkill'
-bind -m vi-command -x '"\C-o": flog'
+bind -m vi-command -x '"\C-r": flog'
 bind -m vi-insert -x '"\C-l": clear -x && echo ${PS1@P}'
 bind -m vi-insert -x '"\C-e": fexplore && echo ${PS1@P}'
 bind -m vi-insert -x '"\C-b": fbase && echo ${PS1@P}'
@@ -329,7 +329,7 @@ bind -m vi-insert -x '"\C-k": fhook'
 bind -m vi-insert -x '"\C-f": ffind'
 bind -m vi-insert -x '"\C-g": fgit'
 bind -m vi-insert -x '"\C-x": fkill'
-bind -m vi-insert -x '"\C-o": flog'
+bind -m vi-insert -x '"\C-r": flog'
 
 
 
