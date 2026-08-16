@@ -206,8 +206,13 @@ flog() {
     local FLOG
     if FLOG="$(HISTTIMEFORMAT='' history | sed 's/^ *[0-9]\+ *//' | `
           `tac | awk '!seen[$0]++' | \fzy -p "shell history > ")"; then
-        READLINE_LINE="$FLOG"
-        READLINE_POINT=${#READLINE_LINE}
+        if declare -p READLINE_LINE &>/dev/null; then
+            READLINE_LINE="$FLOG"
+            READLINE_POINT=${#READLINE_LINE}
+        else
+            local CMD
+            read -e -i "$FLOG" -p ' ' CMD && eval "$CMD"
+        fi
     fi
 }
 
