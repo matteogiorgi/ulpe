@@ -199,7 +199,7 @@ if &rtp =~ 'copilot'
 endif
 ```
 
-Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug) from the root of the repository, or with:
+Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running `ulpe_plug` from the root of the repository, or with:
 ```sh
 for DIR in "$HOME"/.vim/pack/plug/start/*/; do
     git -C "$DIR" pull --ff-only
@@ -211,4 +211,4 @@ Removing a plugin is equally trivial, delete its directory and drop the related 
 rm -rf ~/.vim/pack/plug/start/<plugin>
 ```
 
-> To keep the environment reproducible, add the `git clone` line to [`ulpe_plug`](https://github.com/matteogiorgi/ulpe/blob/main/ulpe_plug) and the configuration block to the *vimscript* the installer copies over, so a fresh machine gets the same setup with a single run.
+> To keep the environment reproducible, add the `git clone` line to `ulpe_plug` and the configuration block to the *vimscript* the installer copies over, so a fresh machine gets the same setup with a single run.
