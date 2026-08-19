@@ -37,6 +37,7 @@ This one installs additional plugins for your *Vim* alongside a little *vimscrip
 ## No-Install
 
 If you don't want to run any installer, you can just copy the main configuration files with the following command and you got yourself a minimal ULPE. Copy-pasta this in your terminal and hit enter 😎
+
 ```sh
 sh -c '
     BASE="https://raw.githubusercontent.com/matteogiorgi/ulpe/refs/heads/main/base"
@@ -61,6 +62,7 @@ For predetermined filetypes, *Vim* can lookup-doc, format and execute, all wired
 ### `kdoc.sh`
 
 A `doc_<lang>` function that prints documentation for a symbol, piped through the `page` helper when the output can be long:
+
 ```sh
 # JULIA HANDLER
 doc_julia() {
@@ -101,6 +103,7 @@ esac
 
 Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing.
 For *Julia* you can use [`JuliaFormatter`](https://juliapackages.com/p/juliaformatter), *Octave* instead has no standard formatter, so this example uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
+
 ```sh
 # JULIA HANDLER
 fmt_julia() {
@@ -131,6 +134,7 @@ esac
 ### `krun.sh`
 
 Add a `run_<lang>` function and a matching case, mirroring the existing handlers (`exec` so the terminal buffer is replaced by the child process):
+
 ```sh
 # JULIA HANDLER
 run_julia() {
@@ -158,6 +162,7 @@ esac
 ### `.vimrc`
 
 Finally, plug the *Vim* filetype into the `language_env` augroup so `<localleader>k` runs it, `<localleader>j` formats it and `K` looks up documentation via `kdoc.sh`:
+
 ```vim
 for [ft, kw] in [
       ...
@@ -200,6 +205,7 @@ endif
 ```
 
 Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running `ulpe_plug` from the root of the repository, or with:
+
 ```sh
 for DIR in "$HOME"/.vim/pack/plug/start/*/; do
     git -C "$DIR" pull --ff-only
@@ -207,6 +213,7 @@ done
 ```
 
 Removing a plugin is equally trivial, delete its directory and drop the related block from `~/.vim/plug/plugin.vim`:
+
 ```sh
 rm -rf ~/.vim/pack/plug/start/<plugin>
 ```
