@@ -194,6 +194,7 @@ Once cloned, launch *Vim* and run `:helptags ALL` to index the plugin documentat
 > Everything under `start/` is loaded at startup. If you want a plugin loaded on demand instead, clone it into `~/.vim/pack/plug/opt/` and pull it in with `:packadd <plugin>` (or lazily from your configuration).
 
 Whatever tuning the plugin needs goes into `~/.vim/plug/plugin.vim`, next to the configuration of the other plugins, wrapped in a fold marker and guarded by a `&rtp` check so the block stays harmless when the plugin isn't installed:
+{% raw %}
 ```vim
 " Copilot {{{
 if &rtp =~ 'copilot'
@@ -205,6 +206,7 @@ if &rtp =~ 'copilot'
 endif
 "}}}
 ```
+{% endraw %}
 
 Updating is just a `git pull` away, either on a single plugin or on all of them at once. You can do it running `ulpe_plug` from the root of the repository, or with:
 
