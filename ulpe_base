@@ -106,7 +106,7 @@ EOF
 PACKAGES="\
 util-linux parted procps \
 git wget curl ssh 7zip fzy less file lazygit btop fd-find trash-cli \
-x11-xkb-utils xclip wl-clipboard \
+x11-xkb-utils xclip wl-clipboard command-not-found \
 glibc-doc man-db manpages-dev manpages-posix manpages-posix-dev \
 tmux vim universal-ctags wamerican \
 groff dict dictd dict-gcide dict-wn \
