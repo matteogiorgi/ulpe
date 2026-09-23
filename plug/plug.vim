@@ -68,6 +68,7 @@ endif
 " Sonokai {{{
 if &rtp =~ 'sonokai'
     colorscheme sonokai
+    let g:lightline_color = 'sonokai'
 endif
 "}}}
 
@@ -78,7 +79,7 @@ endif
 if &rtp =~ 'lightline'
     set noshowmode
     let g:lightline = {
-          \     'colorscheme': 'sonokai',
+          \     'colorscheme': get(g:, 'lightline_color', 'default'),
           \     'active': {
           \         'left': [ [ 'mode', 'paste' ],
           \                   [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
