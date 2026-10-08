@@ -530,13 +530,13 @@ augroup language_env
     autocmd FileType help setlocal iskeyword+=:,',- keywordprg=:help
     autocmd FileType vim setlocal iskeyword+=:,# keywordprg=:help
     for [ft, kw] in [
-          \     ['nroff,text', '-'],
           \     ['c', '.'],
           \     ['go', '.'],
           \     ['sh', '-'],
           \     ['awk', '-'],
           \     ['scheme', '.'],
           \     ['r', '.'],
+          \     ['nroff,text', '-'],
           \ ]
         execute 'autocmd FileType ' . ft
               \ . ' nnoremap <buffer> <silent><localleader>k :call <SID>ExecScript(&filetype)<CR>|'
