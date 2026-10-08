@@ -102,7 +102,7 @@ esac
 ### `kfmt.sh`
 
 Same pattern, a `fmt_<lang>` function that formats the file in place and exits non-zero if the formatter is missing.
-For *Julia* you can use [`JuliaFormatter`](https://juliapackages.com/p/juliaformatter), *Octave* instead has no standard formatter, so this example uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
+For *Julia* you can use [`JuliaFormatter`](https://github.com/JuliaEditorSupport/JuliaFormatter.jl), *Octave* instead has no standard formatter, so this example uses [`octfmt`](https://github.com/matteogiorgi/octfmt), a formatter written in *Go*:
 
 ```sh
 # JULIA HANDLER
